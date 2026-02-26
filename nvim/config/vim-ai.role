@@ -1,0 +1,6 @@
+[default]
+provider = google
+options.token_file_path = ~/.tokens/gemini
+options.model = gemini-2.5-flash
+options.endpoint_url = https://generativelanguage.googleapis.com/v1beta/models
+options.request_timeout = 20
