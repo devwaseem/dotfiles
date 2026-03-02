@@ -42,7 +42,7 @@ in
             just
             kubectl
             lazydocker
-            lazygit
+            lazyworktree
             ncdu
             neovim
             ninja
@@ -191,6 +191,7 @@ in
         ./home/starship.nix
         ./home/aerospace.nix
         ./home/opencode
+        ./home/lazygit.nix
     ];
 
     xdg.configFile."nvim" = {
