@@ -224,6 +224,7 @@ in
     ./home/aerospace.nix
     ./home/opencode
     ./home/lazygit.nix
+    ./home/tmux.nix
   ];
 
   xdg.configFile."nvim" = {
