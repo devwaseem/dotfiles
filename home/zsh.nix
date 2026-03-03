@@ -21,18 +21,23 @@
         "history"
       ];
     };
-    sessionVariables = {
-      EDITOR = "nvim";
-      LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
-      COLORTERM = "truecolor";
-      TERM = "xterm-256color";
-      ZK_PATH = "$HOME/Zettelkasten";
-      BUN_INSTALL = "$HOME/.bun";
-
-      # Secrets
-      EXA_API_KEY = "$(cat ${config.sops.secrets.exa_api_key.path})";
-      CONTEXT7_API_KEY = "$(cat ${config.sops.secrets.context7_api_key.path})";
-    };
+    # sessionVariables = {
+    #   EDITOR = "nvim";
+    #   XDG_CONFIG_HOME = "$HOME/.config";
+    #   SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
+    #   LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
+    #   COLORTERM = "truecolor";
+    #   TERM = "xterm-256color";
+    #   ZK_PATH = "$HOME/Zettelkasten";
+    #   BUN_INSTALL = "$HOME/.bun";
+    #
+    #   # ── secrets ───────────────────────────────────────────────────────────
+    #   EXA_API_KEY = "$(cat ${config.sops.secrets.exa_api_key.path})";
+    #   CONTEXT7_API_KEY = "$(cat ${config.sops.secrets.context7_api_key.path})";
+    #   # Bitwarden
+    #   BW_SESSION = "$(cat ${config.sops.secrets.bw_session.path})";
+    #
+    # };
     syntaxHighlighting = {
       enable = true;
       patterns = {

@@ -4,38 +4,48 @@ let
   homeDir = "/Users/${username}";
 in
 {
-  sops = {
-    defaultSopsFile = ./secrets.yaml;
-    age.sshKeyPaths = [ "${homeDir}/.ssh/id_ed25519" ];
-    age.keyFile = "${homeDir}/.config/sops/age/keys.txt";
-    secrets = {
-      exa_api_key = { };
-      context7_api_key = { };
-    };
-  };
+
   home = {
     stateVersion = "25.05";
     username = username;
     shell = {
       enableZshIntegration = true;
     };
+
     sessionVariables = {
+      EDITOR = "nvim";
+      XDG_CONFIG_HOME = "$HOME/.config";
+      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
+      LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
       COLORTERM = "truecolor";
       TERM = "xterm-256color";
-      EDITOR = "nvim";
-      LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
       ZK_PATH = "$HOME/Zettelkasten";
+      BUN_INSTALL = "$HOME/.bun";
+
+      # ── secrets ───────────────────────────────────────────────────────────
+      EXA_API_KEY = "$(cat ${config.sops.secrets.exa_api_key.path})";
+      CONTEXT7_API_KEY = "$(cat ${config.sops.secrets.context7_api_key.path})";
+      # Bitwarden
+      BW_SESSION = "$(cat ${config.sops.secrets.bw_session.path})";
     };
     file = { };
     packages = with pkgs; [
+      aerc
+      aria2
+      awscli2
       bat
+      bitwarden-cli
       btop
+      bun
+      ccache
+      cloudflared
       delta
       direnv
       eza
       fd
       ffmpeg
       gh
+      gnupg
       gum
       hey
       jq
@@ -44,27 +54,44 @@ in
       lazydocker
       ncdu
       neovim
-      ninja
-      nixd
       nmap
       nodejs
       oha
+      pass
       pls
-      python3
+      pnpm
+      postgresql_18
+      pre-commit
+      python315
+      reattach-to-user-namespace
       ripgrep
-      ruby
+      ruby_4_0
       scrcpy
       sesh
+      sqlit-tui
       starship
       stow
-      tree
+      tesseract4
       tmux
+      tree
+      uv
       watchman
       yarn
       yazi
       zsh-autosuggestions
       zsh-syntax-highlighting
     ];
+  };
+
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    age.sshKeyPaths = [ "${homeDir}/.ssh/id_ed25519" ];
+    age.keyFile = "${homeDir}/.config/sops/age/keys.txt";
+    secrets = {
+      exa_api_key = { };
+      context7_api_key = { };
+      bw_session = { };
+    };
   };
 
   programs = {

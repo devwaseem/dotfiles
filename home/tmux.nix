@@ -9,6 +9,9 @@
     mouse = true;
     prefix = "C-a";
     baseIndex = 1;
+    # Automatically spawn a session if trying to attach and none are running.
+    newSession = true;
+    customPaneNavigationAndResize = true;
 
     plugins = with pkgs.tmuxPlugins; [
       sensible

@@ -53,31 +53,15 @@ in
     taps = [
       "caskroom/cask"
       "max-sixty/worktrunk"
-      "oven-sh/bun"
       "steipete/tap"
       "shopify/shopify"
       "pakerwreah/calendr"
-      "anomalyco/tap"
-      "nikitabobko/tap"
       "muandane/tap"
     ];
     brews = [
-      "aria2"
-      "awscli"
-      "ccache"
-      "cloudflared"
-      "folly"
       "max-sixty/worktrunk/wt"
       "mole"
-      "reattach-to-user-namespace"
-      "oven-sh/bun/bun"
-      "pnpm"
-      "python@3.13"
-      "python@3.14"
-      "rbenv"
-      "ruby@3.1"
       "peekaboo"
-      "tesseract"
       "weasyprint"
       "libmagic"
     ];
@@ -98,9 +82,7 @@ in
       "stats"
     ];
     masApps = {
-      "Keynote" = 409183694;
       "Numbers" = 409203825;
-      "Pages" = 409201541;
     };
   };
 

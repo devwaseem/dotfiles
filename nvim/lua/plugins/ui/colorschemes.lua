@@ -34,10 +34,13 @@ return {
         "catppuccin/nvim",
         name = "catppuccin",
         priority = 1000,
-        enabled = false,
+        enabled = true,
         opts = {
             transparent_background = false,
         }
+    },
+    {
+        "felipeagc/fleet-theme-nvim",
     },
     {
         "marko-cerovac/material.nvim",
