@@ -115,8 +115,25 @@
       bind -n WheelUpPane if -F "#{mouse_any_flag}" "send-keys -M" "copy-mode -e; send-keys -M"
       bind -n WheelDownPane select-pane -t= \; send-keys -M
 
-      # Opencode
-      bind o display-popup -E -w 90% -h 85% -d "#{pane_current_path}" -b rounded "opencode"
+      # Opencode - run a tmux session with the current directory
+      bind o run-shell '
+        # 1. Get the cwd name
+        PROJECT_NAME=$(basename "#{pane_current_path}")
+
+        # 2. Get a short hash of the full path for uniqueness
+        PATH_HASH=$(printf "#{pane_current_path}" | sha256sum | cut -c1-5)
+
+        # 3. Combine them: e.g., opencode_my-project_a7b2c
+        SESSION_NAME="opencode_''${PROJECT_NAME}_''${PATH_HASH}"
+
+        # 4. Create the session if it doesn't exist
+        if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+          tmux new-session -d -s "$SESSION_NAME" -c "#{pane_current_path}" "opencode"
+        fi
+
+        # 5. Attach. The -E flag closes the popup when you exit opencode or detach.
+        tmux display-popup -E -w 90% -h 85% -b rounded "tmux attach-session -t $SESSION_NAME"
+      '
 
       # Lazygit
       bind g display-popup -E -w 90% -h 85% -d "#{pane_current_path}" -b rounded "lazygit"
