@@ -36,7 +36,7 @@
                     sops-nix.homeManagerModules.sops
                     ./home.nix
                   ];
-                } ;
+                };
               };
               users.users.waseemakram.home = "/Users/waseemakram";
             }
