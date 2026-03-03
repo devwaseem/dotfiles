@@ -14,6 +14,7 @@
     newSession = true;
     customPaneNavigationAndResize = true;
     escapeTime = 0;
+    resizeAmount = 10;
 
     # tmuxp.enable = true;
 
@@ -58,6 +59,9 @@
     ];
 
     extraConfig = ''
+      # reload config
+      bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded!"
+
       # Fix colors
       set -as terminal-overrides ",xterm*:Tc"
 
@@ -115,7 +119,7 @@
       bind o display-popup -E -w 90% -h 85% -d "#{pane_current_path}" -b rounded "opencode"
 
       # Lazygit
-      bind g display-popup -E -w 90% -h 85% -d "#{pane_current_path}" -b rounded "lazgit"
+      bind g display-popup -E -w 90% -h 85% -d "#{pane_current_path}" -b rounded "lazygit"
 
       # Custom Session Picker
       unbind s

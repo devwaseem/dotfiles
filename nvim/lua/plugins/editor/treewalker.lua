@@ -16,30 +16,10 @@ return {
         highlight_group = 'CursorLine',
     },
     keys = {
-        {
-            "<C-k>",
-            '<cmd>Treewalker Up<cr>',
-            mode = { "n", "v" },
-        },
-        {
-            "<C-j>",
-            '<cmd>Treewalker Down<cr>',
-            mode = { "n", "v" },
-        },
-        {
-            "<C-h>",
-            '<cmd>Treewalker Left<cr>',
-            mode = { "n", "v" },
-        },
-        {
-            "<C-l>",
-            '<cmd>Treewalker Right<cr>',
-            mode = { "n", "v" },
-        },
         -- Swapping
-        { "<C-m>k", "<cmd>Treewalker SwapUp<cr>",    mode = "n" },
-        { "<C-m>j", "<cmd>Treewalker SwapDown<cr>",  mode = "n" },
-        { "<C-m>h", "<cmd>Treewalker SwapLeft<cr>",  mode = "n" },
-        { "<C-m>l", "<cmd>Treewalker SwapRight<cr>", mode = "n" },
+        { "<leader>sk", "<cmd>Treewalker SwapUp<cr>",    mode = "n" },
+        { "<leader>sj", "<cmd>Treewalker SwapDown<cr>",  mode = "n" },
+        { "<leader>sh", "<cmd>Treewalker SwapLeft<cr>",  mode = "n" },
+        { "<leader>sl", "<cmd>Treewalker SwapRight<cr>", mode = "n" },
     }
 }
