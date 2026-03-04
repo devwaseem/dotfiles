@@ -80,9 +80,22 @@ in
       "whatsapp"
       "spotify"
       "stats"
+      "ghostty"
     ];
     masApps = {
       "Numbers" = 409203825;
+    };
+  };
+
+  networking = {
+    applicationFirewall = {
+      enable = true;
+      enableStealthMode = true;
+      dns = [
+        "1.1.1.1"
+        "8.8.8.8"
+        "8.8.4.4"
+      ];
     };
   };
 
@@ -130,6 +143,7 @@ in
   security.pam.services.sudo_local = {
     touchIdAuth = true;
     reattach = true;
+    watchIdAuth = true;
   };
 
 

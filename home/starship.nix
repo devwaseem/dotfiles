@@ -5,7 +5,7 @@
     settings = {
       command_timeout = 1000;
       format = ''
-        [╭─](bold white)$directory$git_branch$git_status$nix_shell$container
+        [╭─](bold white)\[$directory\] $git_branch$git_status$nix_shell$container
         [╰─](bold white)$character
       '';
 

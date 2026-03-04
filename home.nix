@@ -5,6 +5,7 @@ let
 in
 {
 
+  fonts.fontconfig.enable = true;
   home = {
     stateVersion = "25.05";
     username = username;
@@ -83,6 +84,7 @@ in
     ];
   };
 
+
   sops = {
     defaultSopsFile = ./secrets.yaml;
     age.sshKeyPaths = [ "${homeDir}/.ssh/id_ed25519" ];
@@ -155,11 +157,6 @@ in
       };
     };
 
-    git-worktree-switcher = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
     zoxide = {
       enable = true;
       enableZshIntegration = true;
@@ -219,10 +216,10 @@ in
   };
 
   imports = [
+    ./home/opencode
     ./home/zsh.nix
     ./home/starship.nix
     ./home/aerospace.nix
-    ./home/opencode
     ./home/lazygit.nix
     ./home/tmux.nix
     ./home/ghostty.nix
