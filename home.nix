@@ -225,6 +225,7 @@ in
     ./home/opencode
     ./home/lazygit.nix
     ./home/tmux.nix
+    ./home/ghostty.nix
   ];
 
   xdg.configFile."nvim" = {
