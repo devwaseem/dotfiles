@@ -91,12 +91,21 @@ in
     applicationFirewall = {
       enable = true;
       enableStealthMode = true;
-      dns = [
-        "1.1.1.1"
-        "8.8.8.8"
-        "8.8.4.4"
-      ];
     };
+
+    #To display a list of all the network services on the server’s hardware ports, use networksetup -listallnetworkservices.
+    knownNetworkServices = [
+      "Thunderbolt Bridge"
+      "Wi-Fi"
+      "iPhone USB"
+      "ProtonVPN"
+    ];
+
+    dns = [
+      "1.1.1.1"
+      "8.8.8.8"
+      "8.8.4.4"
+    ];
   };
 
   system.primaryUser = user;
