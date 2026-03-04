@@ -215,6 +215,15 @@ in
     };
   };
 
+  services.jankyborders =
+    {
+      enable = true;
+      settings = {
+        style = "rounded";
+        hidpi = true;
+      };
+    };
+
   imports = [
     ./home/opencode
     ./home/zsh.nix
