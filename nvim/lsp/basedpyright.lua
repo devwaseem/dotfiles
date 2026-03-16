@@ -14,15 +14,21 @@ return {
         disableOrganizeImports = true,
         basedpyright = {
             analysis = {
-                typeCheckingMode = 'off',
-                libraryTypes = true,
-                parameterHints = true,
-                memberHints = true,
+                diagnosticMode = 'workspace',
+                typeCheckingMode = 'recommended',
+                useLibraryCodeForTypes = true,
                 autoImportCompletions = true,
                 autoSearchPaths = true,
+                autoFormatStrings = true,
                 inlayHints = {
-                    genericTypes = true
-                }
+                    variableTypes = true,
+                    callArgumentNames = true,
+                    callArgumentNamesMatching = true,
+                    functionReturnTypes = true,
+                    genericTypes = true,
+                },
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                ignore = { '*' },
             }
         }
     }

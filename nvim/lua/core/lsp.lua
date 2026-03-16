@@ -47,6 +47,11 @@ local on_attach = function(client, bufnr)
     if ok and navbuddy and navbuddy.attach then
         navbuddy.attach(client, bufnr)
     end
+
+    if client.name == 'ruff' then
+        -- Disable hover in favor of Pyright
+        client.server_capabilities.hoverProvider = false
+    end
 end
 
 

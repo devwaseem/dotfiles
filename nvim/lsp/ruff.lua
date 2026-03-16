@@ -26,5 +26,14 @@ return {
     cmd = { 'ruff', 'server' },
     filetypes = { 'python' },
     root_markers = { 'pyproject.toml', 'ruff.toml', '.git' },
-    settings = {},
+    settings = {
+        ruff = {
+            lint = {
+                preview = true
+            },
+            format = {
+                preview = true
+            }
+        }
+    },
 }

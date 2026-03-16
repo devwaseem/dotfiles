@@ -212,6 +212,7 @@ return {
         test = iconset.stopwatch,
     },
     diagnostics = {
+        prefix = iconset.square,
         error = iconset.circle_dot,
         warn = iconset.triangle_outline,
         info = iconset.info_circle_outline,

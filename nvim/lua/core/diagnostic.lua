@@ -1,3 +1,4 @@
+local icons = require('core.icons')
 local M = {}
 
 M.disable_diagnostic = function()
@@ -25,11 +26,21 @@ M.enable_diagnostic = function()
         vim.diagnostic.config({
             virtual_lines = false,
             virtual_text = {
+                space = 2,
+                prefix = icons.diagnostics.prefix,
                 source = "always"
             },
             underline = {
                 severity = { min = vim.diagnostic.severity.WARN },
             },
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = icons.diagnostics.error,
+                    [vim.diagnostic.severity.WARN] = icons.diagnostics.warn,
+                    [vim.diagnostic.severity.INFO] = icons.diagnostics.info,
+                    [vim.diagnostic.severity.HINT] = icons.diagnostics.hint,
+                }
+            }
         })
     end
 end

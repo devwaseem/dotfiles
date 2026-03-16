@@ -12,6 +12,26 @@ local function diagnostic_float_enabled()
     return vim.g.diagnostic_float_enabled
 end
 
+vim.api.nvim_create_autocmd("CursorHold", {
+    group = custom_group,
+    callback = function()
+        if not diagnostic_float_enabled() then
+            return
+        end
+
+        if vim.api.nvim_get_mode().mode:match("^i") then
+            return
+        end
+
+        vim.diagnostic.open_float(nil, {
+            focusable = false,
+            scope = "cursor",
+            close_events = { "CursorMoved", "CursorMovedI", "BufHidden", "InsertCharPre", "WinLeave" },
+        })
+    end,
+    desc = "Show diagnostics float on CursorHold",
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
@@ -140,5 +160,4 @@ vim.api.nvim_create_autocmd("BufRead", {
         vim.bo.filetype = "dosini"
     end,
 })
-
 

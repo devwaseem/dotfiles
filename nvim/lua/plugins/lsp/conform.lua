@@ -35,8 +35,9 @@ return {
                 lua = { "stylua" },
                 -- Conform will run multiple formatters sequentially
                 python = {
-                    "ruff_format",
                     "ruff_fix",
+                    "ruff_format",
+                    "ruff_organize_imports",
                 },
                 -- Use a sub-list to run only the first available formatter
                 javascript = {

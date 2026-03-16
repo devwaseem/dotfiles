@@ -25,6 +25,12 @@ return {
         'python',
         "htmldjango",
         "html",
+        "sh",
+        "dockerfile",
+        "typescript",
+        "typescriptreact",
+        "css",
+        "json",
     },
     event = { "BufEnter", },
     config = function()
@@ -45,9 +51,9 @@ return {
 
         local lint = require('lint')
 
-        lint.linters.mypy.cmd = find_cmd({
-            ".venv/bin/mypy"
-        }, "mypy")
+        -- lint.linters.mypy.cmd = find_cmd({
+        --     ".venv/bin/mypy"
+        -- }, "mypy")
 
         lint.linters.mypy.args = {
             "--config-file", "pyproject.toml"
