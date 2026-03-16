@@ -131,6 +131,9 @@
 
           # Path additions
           export PATH="$HOME/.local/bin:$HOME/.spicetify:$PNPM_HOME:$BUN_INSTALL/bin:$PATH"
+
+          # worktrunk
+          if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
         '';
       in
       lib.mkMerge [ nixConfig zshExtraConfig ];
