@@ -31,27 +31,35 @@ in
     };
     file = { };
     packages = with pkgs; [
+      # bitwarden-cli
       aerc
       aria2
       awscli2
       bat
-      bitwarden-cli
       btop
       bun
+      cargo
       ccache
+      clang
       cloudflared
       delta
       direnv
       eza
       fd
       ffmpeg
+      gemini-cli
       gh
       gnupg
       gum
       hey
       jq
       just
+      k9s
+      kubecolor
       kubectl
+      kubectl-oidc-login
+      kubelogin
+      kubie
       lazydocker
       ncdu
       neovim
@@ -67,6 +75,8 @@ in
       reattach-to-user-namespace
       ripgrep
       ruby_4_0
+      rust-analyzer
+      rustc
       scrcpy
       sesh
       sqlit-tui
