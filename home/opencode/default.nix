@@ -51,7 +51,6 @@
         "opencode-mystatus"
         "opencode-plugin-openspec"
         "@plannotator/opencode@latest"
-        "opencode-antigravity-auth@latest"
         "opencode-gemini-auth@latest"
       ];
       provider = {
