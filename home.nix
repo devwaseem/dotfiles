@@ -23,11 +23,6 @@ in
       ZK_PATH = "$HOME/Zettelkasten";
       BUN_INSTALL = "$HOME/.bun";
 
-      # ── secrets ───────────────────────────────────────────────────────────
-      EXA_API_KEY = "$(cat ${config.sops.secrets.exa_api_key.path})";
-      CONTEXT7_API_KEY = "$(cat ${config.sops.secrets.context7_api_key.path})";
-      # Bitwarden
-      BW_SESSION = "$(cat ${config.sops.secrets.bw_session.path})";
     };
     file = { };
     packages = with pkgs; [
@@ -103,6 +98,7 @@ in
       exa_api_key = { };
       context7_api_key = { };
       bw_session = { };
+      pypi_token = { };
     };
   };
 
@@ -250,4 +246,3 @@ in
   };
 
 }
-

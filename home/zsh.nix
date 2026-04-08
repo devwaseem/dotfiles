@@ -21,23 +21,17 @@
         "history"
       ];
     };
-    # sessionVariables = {
-    #   EDITOR = "nvim";
-    #   XDG_CONFIG_HOME = "$HOME/.config";
-    #   SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
-    #   LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
-    #   COLORTERM = "truecolor";
-    #   TERM = "xterm-256color";
-    #   ZK_PATH = "$HOME/Zettelkasten";
-    #   BUN_INSTALL = "$HOME/.bun";
-    #
-    #   # ── secrets ───────────────────────────────────────────────────────────
-    #   EXA_API_KEY = "$(cat ${config.sops.secrets.exa_api_key.path})";
-    #   CONTEXT7_API_KEY = "$(cat ${config.sops.secrets.context7_api_key.path})";
-    #   # Bitwarden
-    #   BW_SESSION = "$(cat ${config.sops.secrets.bw_session.path})";
-    #
-    # };
+    sessionVariables = {
+      EDITOR = "nvim";
+      XDG_CONFIG_HOME = "$HOME/.config";
+      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
+      LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
+      COLORTERM = "truecolor";
+      TERM = "xterm-256color";
+      ZK_PATH = "$HOME/Zettelkasten";
+      BUN_INSTALL = "$HOME/.bun";
+
+    };
     syntaxHighlighting = {
       enable = true;
       patterns = {
@@ -102,6 +96,11 @@
           fi
         '';
         zshExtraConfig = lib.mkOrder 1500 ''
+          export EXA_API_KEY="$(<${config.sops.secrets.exa_api_key.path})"
+          export CONTEXT7_API_KEY="$(<${config.sops.secrets.context7_api_key.path})"
+          export BW_SESSION="$(<${config.sops.secrets.bw_session.path})"
+          export UV_PUBLISH_TOKEN="$(<${config.sops.secrets.pypi_token.path})"
+
           pyclean () {
             find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
           }
