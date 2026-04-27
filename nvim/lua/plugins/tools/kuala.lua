@@ -58,5 +58,8 @@ return {
         lsp = {
             keymaps = true, -- enables default Kulala's LSP keymaps
         },
+        ui = {
+            show_icons = "signcolumn"
+        }
     },
 }

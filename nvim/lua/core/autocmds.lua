@@ -161,3 +161,19 @@ vim.api.nvim_create_autocmd("BufRead", {
     end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('TreesitterSetup', { clear = true }),
+    callback = function(args)
+        -- 1. Ignore "special" buffers (menus, prompts, dashboards, etc.)
+        local buftype = vim.bo[args.buf].buftype
+        if buftype ~= "" then return end
+
+        -- 2. Check if a parser actually exists for this filetype
+        local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+        if not lang then return end
+
+        -- 3. Try to start, but wrap it in a pcall to prevent crashing the UI
+        -- if something else goes wrong (e.g. corrupted parser)
+        pcall(vim.treesitter.start, args.buf)
+    end,
+})

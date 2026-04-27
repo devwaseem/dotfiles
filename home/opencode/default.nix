@@ -2,7 +2,9 @@
 {
   programs.opencode = {
     enable = true;
-    agents = { };
+    agents = {
+      interview = ./agents/interview.md;
+    };
     web = {
       enable = false;
     };
@@ -12,6 +14,20 @@
 
         Use the mystatus tool to query quota usage. Return the result as-is without modification.
       '';
+    };
+    skills = {
+      design-an-interface = ./skills/design-an-interface;
+      domain-model = ./skills/domain-model;
+      grill-me = ./skills/grill-me;
+      qa = ./skills/qa;
+      request-refactor-plan = ./skills/request-refactor-plan;
+      scaffold-exercises = ./skills/scaffold-exercises;
+      tdd = ./skills/tdd;
+      to-prd = ./skills/to-prd;
+      triage-issue = ./skills/triage-issue;
+      ubiquitous-language = ./skills/ubiquitous-language;
+      write-a-skill = ./skills/write-a-skill;
+      zoom-out = ./skills/zoom-out;
     };
     settings = {
       permission = {
@@ -45,6 +61,10 @@
             "CONTEXT7_API_KEY" = "{env:CONTEXT7_API_KEY}";
           };
           enabled = true;
+        };
+        chrome-devtools = {
+          type = "local";
+          command = [ "npx" "-y" "chrome-devtools-mcp@latest" "--no-usage-statistics" ];
         };
       };
       plugin = [

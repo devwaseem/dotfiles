@@ -73,11 +73,13 @@ in
       rust-analyzer
       rustc
       scrcpy
+      sentry-cli
       sesh
       sqlit-tui
       starship
       stow
       tesseract4
+      tree-sitter
       tmux
       tree
       uv

@@ -55,25 +55,25 @@ in
         alt-a = "workspace A";
         alt-b = "workspace B";
         alt-c = "workspace C";
-        alt-d = "workspace D";
-        alt-e = "workspace E";
-        alt-f = "workspace F";
-        alt-g = "workspace G";
-        alt-i = "workspace I";
-        alt-m = "workspace M";
-        alt-n = "workspace N";
-        alt-o = "workspace O";
-        alt-p = "workspace P";
-        alt-q = "workspace Q";
-        alt-r = "workspace R";
-        alt-s = "workspace S";
-        alt-t = "workspace T";
-        alt-u = "workspace U";
-        alt-v = "workspace V";
-        alt-w = "workspace W";
-        alt-x = "workspace X";
-        alt-y = "workspace Y";
-        alt-z = "workspace Z";
+        # alt-d = "workspace D";
+        # alt-e = "workspace E";
+        alt-f = "exec-and-forget open -a /System/Library/CoreServices/Finder.app";
+        alt-g = "exec-and-forget open -a /Applications/Ghostty.app";
+        # alt-i = "workspace I";
+        # alt-m = "workspace M";
+        # alt-n = "workspace N";
+        alt-o = "exec-and-forget open -a /Applications/Obsidian.app";
+        # alt-p = "workspace P";
+        # alt-q = "workspace Q";
+        # alt-r = "workspace R";
+        # alt-s = "workspace S";
+        # alt-t = "workspace T";
+        # alt-u = "workspace U";
+        # alt-v = "workspace V";
+        # alt-w = "workspace W";
+        # alt-x = "workspace X";
+        # alt-y = "workspace Y";
+        alt-z = "exec-and-forget open -a /Applications/Zen\ Browser.app";
         alt-shift-1 = "move-node-to-workspace 1";
         alt-shift-2 = "move-node-to-workspace 2";
         alt-shift-3 = "move-node-to-workspace 3";
@@ -123,11 +123,6 @@ in
       };
 
       on-window-detected = [
-        {
-          "if".app-id = "com.apple.finder";
-          run = "move-node-to-workspace 9";
-        }
-
         {
           "if" = {
             app-id = "com.apple.systempreferences";

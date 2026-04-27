@@ -21,6 +21,7 @@ local ft = {
 
 return {
     "windwp/nvim-ts-autotag",
+    enabled = false,
     ft = ft,
     config = function()
         require('nvim-ts-autotag').setup({

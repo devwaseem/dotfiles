@@ -17,6 +17,15 @@ local function IsZoomedIn()
 end
 
 
+local function get_ts_lang()
+    local ok, parser = pcall(vim.treesitter.get_parser, 0)
+    if not ok or not parser then return "" end
+
+    -- This returns the primary language of the buffer
+    return " " .. parser:lang()
+end
+
+
 local icons = require("core.icons")
 local function indent_settings()
     return (vim.bo.expandtab and "S" or "T")
@@ -239,6 +248,9 @@ return {
                     {
                         require("noice").api.status.search.get,
                         cond = require("noice").api.status.search.has,
+                    },
+                    {
+                        get_ts_lang
                     },
                     {
                         "filetype",

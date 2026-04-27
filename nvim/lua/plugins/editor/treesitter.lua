@@ -1,17 +1,18 @@
 return {
     "nvim-treesitter/nvim-treesitter",
-    branch = "master",
+    branch = "main",
+    enabled = false,
     dependencies = {
-        "RRethy/nvim-treesitter-textsubjects",
+        -- "RRethy/nvim-treesitter-textsubjects",
         "JoosepAlviste/nvim-ts-context-commentstring",
-        {
-            "nvim-treesitter/nvim-treesitter-textobjects",
-        }
+        -- {
+        --     "nvim-treesitter/nvim-treesitter-textobjects",
+        -- }
     },
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
-        require 'nvim-treesitter.configs'.setup {
+        require('nvim-treesitter').setup {
             highlight = { enable = true },
             indent = { enable = true },
             ensure_installed = {
@@ -85,14 +86,14 @@ return {
         }
 
 
-        require('nvim-treesitter-textsubjects').configure({
-            prev_selection = ',',
-            keymaps = {
-                ['.'] = 'textsubjects-smart',
-                [';'] = 'textsubjects-container-outer',
-                ['i;'] = 'textsubjects-container-inner',
-            },
-        })
+        -- require('nvim-treesitter-textsubjects').configure({
+        --     prev_selection = ',',
+        --     keymaps = {
+        --         ['.'] = 'textsubjects-smart',
+        --         [';'] = 'textsubjects-container-outer',
+        --         ['i;'] = 'textsubjects-container-inner',
+        --     },
+        -- })
 
 
         local parsers = require("nvim-treesitter.parsers")

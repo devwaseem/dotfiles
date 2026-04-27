@@ -50,6 +50,7 @@ in
       autoUpdate = true;
       cleanup = "zap";
     };
+    enableZshIntegration = true;
     taps = [
       "caskroom/cask"
       "max-sixty/worktrunk"
@@ -64,6 +65,7 @@ in
       "peekaboo"
       "weasyprint"
       "libmagic"
+      "helm" # not available for darwin in nix pkgs yet
     ];
     casks = [
       "claude-code"
@@ -81,6 +83,7 @@ in
       "spotify"
       "stats"
       "ghostty"
+      "obsidian"
     ];
     masApps = {
       "Numbers" = 409203825;
@@ -119,6 +122,16 @@ in
       show-process-indicators = true;
       show-recents = false;
       mru-spaces = false;
+      enable-spring-load-actions-on-all-items = true;
+      showDesktopGestureEnabled = true;
+      showLaunchpadGestureEnabled = true;
+      showAppExposeGestureEnabled = true;
+      showMissionControlGestureEnabled = true;
+    };
+
+    controlcenter = {
+      BatteryShowPercentage = true;
+      Bluetooth = false;
     };
 
     finder = {
@@ -138,6 +151,8 @@ in
       AppleIconAppearanceTheme = "ClearDark";
       AppleInterfaceStyleSwitchesAutomatically = true;
       AppleShowAllFiles = true;
+      AppleShowAllExtensions = true;
+      AppleTemperatureUnit = "Celsius";
 
       # Keyboard repeat settings (essential for Vim)
       ApplePressAndHoldEnabled = false;
@@ -145,7 +160,13 @@ in
       KeyRepeat = 2; # normal minimum is 2 (30 ms)
 
     };
-    screencapture.location = "~/Downloads";
+
+    screencapture = {
+      location = "~/Downloads";
+      target = "clipboard";
+      type = "png";
+    };
+
   };
 
   # Enable TouchID for sudo

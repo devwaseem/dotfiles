@@ -2,6 +2,6 @@ return {
     "mbbill/undotree",
     event = "VeryLazy",
     keys = {
-        { "<leader>U", "<cmd>UndotreeToggle<cr>", desc = "Undo Tree" },
+        { "<leader>Uu", "<cmd>UndotreeToggle<cr>", desc = "Undo Tree" },
     }
 }
