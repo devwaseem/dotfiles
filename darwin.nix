@@ -66,6 +66,7 @@ in
       "weasyprint"
       "libmagic"
       "helm" # not available for darwin in nix pkgs yet
+      "kubelogin"
     ];
     casks = [
       "claude-code"

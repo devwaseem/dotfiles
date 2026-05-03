@@ -28,6 +28,7 @@
       ubiquitous-language = ./skills/ubiquitous-language;
       write-a-skill = ./skills/write-a-skill;
       zoom-out = ./skills/zoom-out;
+      improve-codebase-architecture = ./skills/improve-codebase-architecture;
     };
     settings = {
       permission = {
@@ -77,6 +78,9 @@
         google = {
           options = {
             projectId = "gen-lang-client-0291774259";
+          };
+          models = {
+            "gemini-3-flash" = { };
           };
         };
       };

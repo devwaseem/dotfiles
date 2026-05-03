@@ -27,7 +27,6 @@ in
     file = { };
     packages = with pkgs; [
       # bitwarden-cli
-      aerc
       aria2
       awscli2
       bat
@@ -38,7 +37,6 @@ in
       clang
       cloudflared
       delta
-      direnv
       eza
       fd
       ffmpeg
@@ -52,8 +50,6 @@ in
       k9s
       kubecolor
       kubectl
-      kubectl-oidc-login
-      kubelogin
       kubie
       lazydocker
       ncdu
@@ -202,6 +198,9 @@ in
 
     direnv = {
       enable = true;
+      package = pkgs.direnv.overrideAttrs (_: {
+        doCheck = false;
+      });
       nix-direnv.enable = true; # Faster nix-shell loading
       enableZshIntegration = true;
     };
