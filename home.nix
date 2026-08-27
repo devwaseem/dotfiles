@@ -6,6 +6,8 @@ in
 {
 
   fonts.fontconfig.enable = true;
+  programs.qmd.enable = true;
+
   home = {
     stateVersion = "25.05";
     inherit username;

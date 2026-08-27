@@ -19,6 +19,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    qmd = {
+      url = "github:tobi/qmd";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -29,6 +33,7 @@
       sops-nix,
       home-manager,
       git-hooks-nix,
+      qmd,
     }:
     let
       system = "aarch64-darwin";
@@ -81,6 +86,7 @@
                 users.waseemakram = {
                   imports = [
                     sops-nix.homeManagerModules.sops
+                    qmd.homeModules.default
                     ./home.nix
                   ];
                 };

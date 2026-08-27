@@ -1,0 +1,20 @@
+{
+  "id": "b533725af",
+  "name": "Build Darwin config",
+  "command": "darwin-rebuild build --flake .#Waseems-MacBook-Air",
+  "description": "Validate the QMD Home Manager integration",
+  "status": "completed",
+  "outputPath": ".pi/tasks/session-60257-60257/b533725af.output",
+  "cwd": "/Users/waseemakram/dotfiles",
+  "startTime": 1787856227498,
+  "endTime": 1787856313004,
+  "exitCode": 0,
+  "signal": null,
+  "pid": 72672,
+  "bytesWritten": 3184,
+  "isAgent": false,
+  "notified": true,
+  "notifyOnCompletion": true,
+  "triggerOnCompletion": true,
+  "timeoutSeconds": 1800
+}
