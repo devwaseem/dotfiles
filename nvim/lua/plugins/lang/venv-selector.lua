@@ -18,6 +18,7 @@ return {
             poetry_path = "./"
         })
         opts.enable_cached_venvs = true
+        opts.override_notify = false
         require('venv-selector').setup(opts)
     end,
 }

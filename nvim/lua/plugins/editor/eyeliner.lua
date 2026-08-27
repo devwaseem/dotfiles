@@ -17,7 +17,7 @@ return {
             -- e.g., to disable on help files:
             -- disabled_filetypes = {"help"}
             disabled_filetypes = {
-                "NavBuddy", "Outline", "Alpha", "toggleterm", "Trouble", "neo-tree", "lazy", "mason"
+                "Outline", "Alpha", "toggleterm", "Trouble", "neo-tree", "lazy", "mason"
             },
 
             -- buftypes for which eyeliner should be disabled

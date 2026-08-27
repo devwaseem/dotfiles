@@ -12,20 +12,13 @@ end
 
 return {
     "sphamba/smear-cursor.nvim",
-    opts = {
-        -- cursor_color = "#ff8800",
-        -- stiffness = 0.3,
-        -- trailing_stiffness = 0.1,
-        -- damping = 0.5,
-        -- trailing_exponent = 5,
-        -- never_draw_over_target = true,
-        -- hide_target_hack = true,
-        -- gamma = 1,
+    keys = {
+        { "<leader>Uc", toggle, desc = "Toggle smear cursor" },
     },
+    opts = {},
     config = function(_, opts)
         local smear_cursor = require("smear_cursor")
         smear_cursor.setup(opts)
-        -- smear_cursor.enabled = vim.g.smear_cursor_enabled
-        vim.keymap.set("n", "<leader>Uc", toggle, { desc = "Toggle smear cursor" })
-    end
+        smear_cursor.enabled = false
+    end,
 }

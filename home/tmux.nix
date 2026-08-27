@@ -25,7 +25,7 @@
       {
         plugin = tmux-thumbs;
         extraConfig = ''
-          set -g @thumbs-command 'echo -n {} | ${if pkgs.stdenv.isDarwin then "pbcopy" else "wl-copy"}'
+          set -g @thumbs-command 'echo -n {} | ${if pkgs.stdenv.hostPlatform.isDarwin then "pbcopy" else "wl-copy"}'
           set -g @thumbs-position off_left
         '';
       }

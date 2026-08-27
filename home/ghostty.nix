@@ -1,10 +1,9 @@
-{ pkgs, ... }:
-{
+_: {
   programs.ghostty = {
     enable = true;
-    package = pkgs.ghostty-bin;
+    package = null;
     enableZshIntegration = true;
-    installVimSyntax = true;
+    installVimSyntax = false;
     settings = {
       # ui
       background = "#000000";

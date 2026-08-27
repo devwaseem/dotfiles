@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   programs.opencode = {
     enable = true;
     agents = {
@@ -65,7 +64,12 @@
         };
         chrome-devtools = {
           type = "local";
-          command = [ "npx" "-y" "chrome-devtools-mcp@latest" "--no-usage-statistics" ];
+          command = [
+            "npx"
+            "-y"
+            "chrome-devtools-mcp@latest"
+            "--no-usage-statistics"
+          ];
         };
       };
       plugin = [
@@ -77,7 +81,7 @@
       provider = {
         google = {
           options = {
-            projectId = "gen-lang-client-0291774259";
+            projectId = "woven-patrol-489808-t8";
           };
           models = {
             "gemini-3-flash" = { };

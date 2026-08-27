@@ -1,32 +1,21 @@
-{ pkgs, ... }: {
+_: {
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
     settings = {
       command_timeout = 1000;
-      format = ''
-        [╭─](bold white)\[$directory\] $git_branch$git_status$nix_shell$container
-        [╰─](bold white)$character
-      '';
-
-      right_format = ''
-        $cmd_duration$aws$gcloud$python$nodejs$rust$golang
-      '';
-
-      # Fill pushes the duration/time to the far right of the first line
-      fill = {
-        symbol = " ";
-      };
+      format = "$nix_shell$directory$python$git_branch$git_status\n$character";
+      right_format = "\${custom.git_project}";
+      add_newline = false;
 
       character = {
         success_symbol = "[❯](bold green)";
         error_symbol = "[❯](bold red)";
-        vimcmd_symbol = "[❮](bold purple)";
       };
 
       nix_shell = {
         symbol = "❄️ ";
-        format = "via [$symbol$state( \($name\))]($style) ";
+        format = "[$symbol]($style)";
         style = "bold blue";
         impure_msg = "impure";
         pure_msg = "pure";
@@ -35,10 +24,29 @@
       directory = {
         style = "bold cyan";
         format = "[$path]($style) ";
-        truncation_length = 3;
-        truncation_symbol = "…/";
-        truncate_to_repo = true; # If inside a Git repo, stop truncating at the root
-        fish_style_pwd_dir_length = 1; # Turns /home/user/projects into /h/u/projects
+        truncation_length = 1;
+        truncate_to_repo = false;
+        read_only = " 󰌾";
+      };
+
+      custom.git_project = {
+        command = ''basename "$(git rev-parse --show-toplevel)"'';
+        when = "git rev-parse --is-inside-work-tree";
+        format = "[󰂋 $output]($style)";
+        style = "bold cyan";
+      };
+
+      git_branch = {
+        symbol = "⎇ ";
+        format = "[$symbol$branch]($style) ";
+        style = "bold purple";
+      };
+
+      git_status = {
+        format = "([\\[$all_status$ahead_behind\\]]($style) )";
+        style = "bold red";
+        modified = "!";
+        untracked = "?";
       };
 
       nodejs = {
@@ -48,9 +56,8 @@
       };
 
       python = {
-        symbol = " ";
         style = "bold yellow";
-        format = "via [$symbol($version )]($style)";
+        format = "[(\\($virtualenv\\))]($style) ";
       };
 
       aws.symbol = "  ";
@@ -63,14 +70,12 @@
       crystal.symbol = " ";
       dart.symbol = " ";
       deno.symbol = " ";
-      directory.read_only = " 󰌾";
       docker_context.symbol = " ";
       elixir.symbol = " ";
       elm.symbol = " ";
       fennel.symbol = " ";
       fossil_branch.symbol = " ";
       gcloud.symbol = "  ";
-      git_branch.symbol = " ";
       git_commit.tag_symbol = "  ";
       golang.symbol = " ";
       guix_shell.symbol = " ";

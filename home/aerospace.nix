@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 let
   gap = 6;
@@ -11,6 +11,39 @@ in
       keepAlive = true;
     };
     settings = {
+      config-version = 2;
+      auto-reload-config = true;
+      persistent-workspaces = [
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+        "6"
+        "7"
+        "8"
+        "9"
+        "A"
+        "B"
+        "C"
+        "D"
+        "E"
+        "G"
+        "I"
+        "N"
+        "O"
+        "P"
+        "Q"
+        "R"
+        "S"
+        "T"
+        "U"
+        "V"
+        "W"
+        "X"
+        "Y"
+        "Z"
+      ];
       enable-normalization-flatten-containers = true;
       enable-normalization-opposite-orientation-for-nested-containers = true;
       accordion-padding = 30;
@@ -25,10 +58,12 @@ in
       gaps = {
         inner.horizontal = gap;
         inner.vertical = gap;
-        outer.left = gap;
-        outer.bottom = gap;
-        outer.top = gap;
-        outer.right = gap;
+        outer = {
+          left = gap;
+          bottom = gap;
+          top = gap;
+          right = gap;
+        };
       };
       mode.main.binding = {
         alt-slash = "layout tiles horizontal vertical";
@@ -37,10 +72,14 @@ in
         alt-j = "focus down";
         alt-k = "focus up";
         alt-l = "focus right";
+        alt-ctrl-h = "focus-monitor --wrap-around left";
+        alt-ctrl-l = "focus-monitor --wrap-around right";
         alt-shift-h = "move left";
         alt-shift-j = "move down";
         alt-shift-k = "move up";
         alt-shift-l = "move right";
+        alt-ctrl-shift-h = "move-node-to-monitor --focus-follows-window --wrap-around left";
+        alt-ctrl-shift-l = "move-node-to-monitor --focus-follows-window --wrap-around right";
         alt-shift-minus = "resize smart -50";
         alt-shift-equal = "resize smart +50";
         alt-1 = "workspace 1";
@@ -55,8 +94,8 @@ in
         alt-a = "workspace A";
         alt-b = "workspace B";
         alt-c = "workspace C";
-        # alt-d = "workspace D";
-        # alt-e = "workspace E";
+        alt-d = "workspace D";
+        alt-e = "workspace E";
         alt-f = "exec-and-forget open -a /System/Library/CoreServices/Finder.app";
         alt-g = "exec-and-forget open -a /Applications/Ghostty.app";
         # alt-i = "workspace I";
@@ -73,7 +112,7 @@ in
         # alt-w = "workspace W";
         # alt-x = "workspace X";
         # alt-y = "workspace Y";
-        alt-z = "exec-and-forget open -a /Applications/Zen\ Browser.app";
+        alt-z = "exec-and-forget open /Applications/Zen.app";
         alt-shift-1 = "move-node-to-workspace 1";
         alt-shift-2 = "move-node-to-workspace 2";
         alt-shift-3 = "move-node-to-workspace 3";
@@ -111,32 +150,67 @@ in
       };
 
       mode.service.binding = {
-        esc = [ "reload-config" "mode main" ];
-        r = [ "flatten-workspace-tree" "mode main" ];
-        f = [ "layout floating tiling" "mode main" ];
-        backspace = [ "close-all-windows-but-current" "mode main" ];
-        alt-shift-h = [ "join-with left" "mode main" ];
-        alt-shift-j = [ "join-with down" "mode main" ];
-        alt-shift-k = [ "join-with up" "mode main" ];
-        alt-shift-l = [ "join-with right" "mode main" ];
+        esc = [
+          "reload-config"
+          "mode main"
+        ];
+        r = [
+          "flatten-workspace-tree"
+          "mode main"
+        ];
+        f = [
+          "layout floating tiling"
+          "mode main"
+        ];
+        backspace = [
+          "close-all-windows-but-current"
+          "mode main"
+        ];
+        h = [
+          "swap --wrap-around left"
+          "mode main"
+        ];
+        j = [
+          "swap --wrap-around down"
+          "mode main"
+        ];
+        k = [
+          "swap --wrap-around up"
+          "mode main"
+        ];
+        l = [
+          "swap --wrap-around right"
+          "mode main"
+        ];
+        alt-shift-h = [
+          "join-with left"
+          "mode main"
+        ];
+        alt-shift-j = [
+          "join-with down"
+          "mode main"
+        ];
+        alt-shift-k = [
+          "join-with up"
+          "mode main"
+        ];
+        alt-shift-l = [
+          "join-with right"
+          "mode main"
+        ];
         alt-shift-equal = "balance-sizes";
       };
 
       on-window-detected = [
         {
-          "if" = {
-            app-id = "com.apple.systempreferences";
-            app-name-regex-substring = "settings";
-            window-title-regex-substring = "substring";
-            during-aerospace-startup = true;
-          };
-          check-further-callbacks = true;
-          run = [
-            "layout floating"
-          ];
+          "if" = "test %{app-bundle-id} = com.apple.FaceTime";
+          run = "layout floating";
+        }
+        {
+          "if" = "test %{app-bundle-id} = com.apple.systempreferences";
+          run = "layout floating";
         }
       ];
     };
   };
 }
-

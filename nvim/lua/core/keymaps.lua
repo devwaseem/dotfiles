@@ -2,9 +2,6 @@ local utils = require('core.utils')
 local nmap = utils.nmap
 local vmap = utils.vmap
 
---
-nmap('<leader>w', "<cmd>w<CR>", "Save File")
-
 -- Quickfix
 nmap('<leader>QQ', "<cmd>copen<CR>", "Open Quickfix")
 nmap('<leader>Qc', "<cmd>cclose<CR>", "Close Quickfix")

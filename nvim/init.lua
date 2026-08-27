@@ -58,8 +58,6 @@ require("lazy").setup(
 
 
 vim.cmd.colorscheme "material"
--- vim.cmd.colorscheme "teide-darker"
--- vim.cmd.colorscheme "koda"
 require "core.highlights"
 
 vim.opt.mouse = "a"

@@ -1,4 +1,8 @@
-{ pkgs, lib, config, ... }:
+{
+  lib,
+  config,
+  ...
+}:
 {
   programs.zsh = {
     enable = true;
@@ -20,17 +24,6 @@
         "match_prev_cmd"
         "history"
       ];
-    };
-    sessionVariables = {
-      EDITOR = "nvim";
-      XDG_CONFIG_HOME = "$HOME/.config";
-      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
-      LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
-      COLORTERM = "truecolor";
-      TERM = "xterm-256color";
-      ZK_PATH = "$HOME/Zettelkasten";
-      BUN_INSTALL = "$HOME/.bun";
-
     };
     syntaxHighlighting = {
       enable = true;
@@ -119,6 +112,11 @@
           bindkey -v
           bindkey "^[[A" history-beginning-search-backward
           bindkey "^[[B" history-beginning-search-forward
+          for keymap in emacs vicmd viins; do
+            bindkey -M "$keymap" -r '\ec'
+            bindkey -M "$keymap" '^G' fzf-cd-widget
+            bindkey -M "$keymap" '^L' clear-screen
+          done
 
           # Zstyle completions
           zstyle ':completion:*' menu select
@@ -129,13 +127,16 @@
           [ -e "$HOME/.iterm2_shell_integration.zsh" ] && source "$HOME/.iterm2_shell_integration.zsh"
 
           # Path additions
-          export PATH="$HOME/.local/bin:$HOME/.spicetify:$PNPM_HOME:$BUN_INSTALL/bin:$PATH"
+          export PATH="$HOME/.local/bin:$HOME/.spicetify:$PNPM_HOME:$PATH:$BUN_INSTALL/bin"
 
           # worktrunk
           if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
         '';
       in
-      lib.mkMerge [ nixConfig zshExtraConfig ];
+      lib.mkMerge [
+        nixConfig
+        zshExtraConfig
+      ];
     oh-my-zsh = {
       enable = true;
       plugins = [
@@ -154,7 +155,6 @@
         "fzf"
         "git"
         "git-commit"
-        "git-prompt"
         "github"
         "gitignore"
         "history"

@@ -6,16 +6,14 @@ return {
     opts = {
         bigfile = { enabled = true },
         dashboard = { enabled = false },
-        explorer = { enabled = true },
-        input = {
-            enabled = true,
-        },
-        picker = { enabled = true },
+        explorer = { enabled = false },
+        input = { enabled = false },
+        picker = { enabled = false },
         notifier = { enabled = false },
         quickfile = { enabled = true },
         scope = { enabled = true },
         scroll = { enabled = false },
-        statuscolumn = { enabled = true },
+        statuscolumn = { enabled = false },
         words = { enabled = true },
         indent = {
             indent = {
@@ -28,15 +26,14 @@ return {
             chunk = {
                 enabled = true,
                 char = {
-                    arrow = "─"
+                    arrow = "─",
                 },
             },
             animate = {
                 enabled = vim.fn.has("nvim-0.10") == 1,
-                -- enabled = false,
                 duration = {
-                    step = 10,   -- ms per step
-                    total = 500, -- maximum duration
+                    step = 8,
+                    total = 180,
                 },
             },
             filter = function(buf)

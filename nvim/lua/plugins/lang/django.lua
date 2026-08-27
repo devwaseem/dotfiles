@@ -1,5 +1,6 @@
 return {
     "mizisu/django.nvim",
+    ft = { "htmldjango", "jinja" },
     dependencies = {
         { "folke/snacks.nvim" },
     },

@@ -1,8 +1,7 @@
 local is_inside_work_tree = {}
-local utils = require("telescope.utils")
-local builtin = require('telescope.builtin')
 
 local function open_project_files()
+    local builtin = require('telescope.builtin')
     local ivy_theme = require('telescope.themes').get_ivy()
 
     local cwd = vim.fn.getcwd()
@@ -23,7 +22,7 @@ local function open_project_files()
 end
 
 local function grep_cword()
-    builtin.grep_string({
+    require('telescope.builtin').grep_string({
         search = vim.fn.expand("<cword>"),
     })
 end
@@ -55,7 +54,7 @@ local function grep_visual_selection()
         return
     end
 
-    builtin.grep_string({
+    require('telescope.builtin').grep_string({
         search = selection,
     })
 end
@@ -92,10 +91,16 @@ return {
     config = function()
         local telescope = require('telescope')
         local actions = require('telescope.actions')
+        local utils = require("telescope.utils")
         local my_theme = require('overrides.telescope').get_ivy_theme()
 
         telescope.setup {
             defaults = vim.tbl_deep_extend("force", my_theme, {
+                preview = {
+                    treesitter = {
+                        enable = false,
+                    },
+                },
                 mappings = {
                     i = {
                         ["<C-h>"] = "which_key",

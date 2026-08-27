@@ -2,11 +2,19 @@ return {
     "folke/noice.nvim",
     dependencies = {
         "MunifTanjim/nui.nvim",
-        "rcarriga/nvim-notify",
+        {
+            "rcarriga/nvim-notify",
+            opts = {
+                background_colour = "#090B10",
+            },
+        },
     },
-    enabled=true,
+    enabled = true,
     event = "VeryLazy",
     opts = {
+        notify = {
+            enabled = false,
+        },
         lsp = {
             override = {
                 ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -46,7 +54,7 @@ return {
                 lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
                 help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
                 input = { view = "cmdline_input", icon = "󰥻 " },
-            }
-        }
+            },
+        },
     },
 }

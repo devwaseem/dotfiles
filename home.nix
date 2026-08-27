@@ -8,44 +8,50 @@ in
   fonts.fontconfig.enable = true;
   home = {
     stateVersion = "25.05";
-    username = username;
+    inherit username;
     shell = {
       enableZshIntegration = true;
     };
 
     sessionVariables = {
       EDITOR = "nvim";
-      XDG_CONFIG_HOME = "$HOME/.config";
-      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
-      LZ_CONFIG_DIR = "$HOME/.config/lazygit/";
+      XDG_CONFIG_HOME = "${homeDir}/.config";
+      SOPS_AGE_KEY_FILE = "${homeDir}/.config/sops/age/keys.txt";
+      LZ_CONFIG_DIR = "${homeDir}/.config/lazygit";
       COLORTERM = "truecolor";
       TERM = "xterm-256color";
-      ZK_PATH = "$HOME/Zettelkasten";
-      BUN_INSTALL = "$HOME/.bun";
-
+      ZK_PATH = "${homeDir}/Zettelkasten";
+      BUN_INSTALL = "${homeDir}/.bun";
+      PNPM_HOME = "${homeDir}/Library/pnpm";
     };
     file = { };
     packages = with pkgs; [
       # bitwarden-cli
       aria2
+      ast-grep
       awscli2
-      bat
+      bruno
       btop
       bun
       cargo
       ccache
       clang
       cloudflared
+      codex
+      deadnix
       delta
-      eza
       fd
       ffmpeg
-      gemini-cli
+      antigravity-cli
       gh
+      gh-dash
       gnupg
       gum
+      herdr
       hey
+      hunk
       jq
+      jujutsu
       just
       k9s
       kubecolor
@@ -54,8 +60,11 @@ in
       lazydocker
       ncdu
       neovim
+      nixd
+      nixfmt
       nmap
       nodejs
+      nvd
       oha
       pass
       pls
@@ -72,21 +81,21 @@ in
       sentry-cli
       sesh
       sqlit-tui
-      starship
+      statix
       stow
       tesseract4
-      tree-sitter
-      tmux
+      terminal-notifier
       tree
+      tree-sitter
+      tuicr
       uv
+      watch
+      watchexec
       watchman
       yarn
       yazi
-      zsh-autosuggestions
-      zsh-syntax-highlighting
     ];
   };
-
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
@@ -182,8 +191,9 @@ in
       enable = true;
       enableZshIntegration = true;
       defaultCommand = "fd --type f --hidden --follow --exclude .git";
-      fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
-      changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
+      fileWidget.command = "fd --type f --hidden --follow --exclude .git";
+      changeDirWidget.command = "fd --type d --hidden --follow --exclude .git";
+      historyWidget.command = "";
     };
 
     bat = {
@@ -216,20 +226,15 @@ in
       ];
     };
 
-    lazyworktree = {
-      enable = true;
-      enableZshIntegration = true;
-    };
   };
 
-  services.jankyborders =
-    {
-      enable = true;
-      settings = {
-        style = "rounded";
-        hidpi = true;
-      };
+  services.jankyborders = {
+    enable = true;
+    settings = {
+      style = "rounded";
+      hidpi = true;
     };
+  };
 
   imports = [
     ./home/opencode
@@ -239,6 +244,8 @@ in
     ./home/lazygit.nix
     ./home/tmux.nix
     ./home/ghostty.nix
+    ./home/keyboard.nix
+    ./home/herdr.nix
   ];
 
   xdg.configFile."nvim" = {

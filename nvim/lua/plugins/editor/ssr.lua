@@ -1,5 +1,8 @@
 return {
     "cshuaimin/ssr.nvim",
+    keys = {
+        { "<leader>st", function() require("ssr").open() end, mode = { "n", "x" }, desc = "Structural search and replace" },
+    },
     config = function()
         require("ssr").setup {
             border = "rounded",
@@ -16,7 +19,5 @@ return {
                 replace_all = "<leader><cr>",
             },
         }
-
-        vim.keymap.set({ "n", "x" }, "<leader>st", function() require("ssr").open() end)
     end
 }

@@ -1,30 +1,28 @@
 local utils = require('core.utils')
 local nmap = utils.nmap
 
+local function telescope_picker(picker, opts)
+    return function()
+        local ok, builtin = pcall(require, 'telescope.builtin')
+        if ok then
+            builtin[picker](opts)
+            return
+        end
+
+        vim.notify('Telescope is unavailable', vim.log.levels.WARN)
+    end
+end
 
 local on_attach = function(client, bufnr)
     local lsp = vim.lsp
-    if pcall(require, "telescope.builtin") then
-        nmap({ 'gd', "<leader>ld" }, require('telescope.builtin').lsp_definitions, "go to Definitions",
-            { buffer = bufnr })
-        nmap({ 'gr', "<leader>lR" }, require('telescope.builtin').lsp_references, "go to References", { buffer = bufnr })
-        nmap({ 'gT', "<leader>lT" }, require('telescope.builtin').lsp_type_definitions, "go to Type Definitions",
-            { buffer = bufnr })
-        nmap({ 'gI', "<leader>lI" }, require('telescope.builtin').lsp_implementations, "go to Implementations",
-            { buffer = bufnr })
-        nmap('<leader>lsw', require('telescope.builtin').lsp_workspace_symbols, "LSP Workspace Symbols",
-            { buffer = bufnr })
-        nmap('<leader>lsd', require('telescope.builtin').lsp_document_symbols, "LSP Document Symbols", { buffer = bufnr })
-        nmap('<leader>led', function() require('telescope.builtin').diagnostics({ bufnr = bufnr }) end,
-            "LSP Document Diagnostics", { buffer = bufnr })
-        nmap('<leader>lew', function() require('telescope.builtin').diagnostics() end,
-            "LSP Workspace Diagnostics", { buffer = bufnr })
-    else
-        nmap({ 'gd', "<leader>lD" }, lsp.buf.definition, "go to Definitions", { buffer = bufnr })
-        nmap({ 'gr', "<leader>lR" }, lsp.buf.references, "go to References", { buffer = bufnr })
-        nmap({ 'gT', "<leader>lT" }, lsp.buf.type_definition, "go to Type Definitions", { buffer = bufnr })
-        nmap({ 'gI', "<leader>gI" }, lsp.buf.implementation, "go to Implementations", { buffer = bufnr })
-    end
+    nmap({ 'gd', "<leader>ld" }, telescope_picker('lsp_definitions'), "go to Definitions", { buffer = bufnr })
+    nmap({ 'gr', "<leader>lR" }, telescope_picker('lsp_references'), "go to References", { buffer = bufnr })
+    nmap({ 'gT', "<leader>lT" }, telescope_picker('lsp_type_definitions'), "go to Type Definitions", { buffer = bufnr })
+    nmap({ 'gI', "<leader>lI" }, telescope_picker('lsp_implementations'), "go to Implementations", { buffer = bufnr })
+    nmap('<leader>lsw', telescope_picker('lsp_workspace_symbols'), "LSP Workspace Symbols", { buffer = bufnr })
+    nmap('<leader>lsd', telescope_picker('lsp_document_symbols'), "LSP Document Symbols", { buffer = bufnr })
+    nmap('<leader>led', telescope_picker('diagnostics', { bufnr = bufnr }), "LSP Document Diagnostics", { buffer = bufnr })
+    nmap('<leader>lew', telescope_picker('diagnostics'), "LSP Workspace Diagnostics", { buffer = bufnr })
 
     if pcall(require, "conform") then
         nmap("<leader>lf", "<cmd>Format<CR>", "Format Code", { buffer = bufnr })
@@ -41,11 +39,6 @@ local on_attach = function(client, bufnr)
         nmap("<leader>lr", require("live-rename").rename, "LSP Rename Symbol", { buffer = bufnr })
     else
         nmap("<leader>lr", lsp.buf.rename, "LSP Rename Symbol", { buffer = bufnr })
-    end
-
-    local ok, navbuddy = pcall(require, "nvim-navbuddy")
-    if ok and navbuddy and navbuddy.attach then
-        navbuddy.attach(client, bufnr)
     end
 
     if client.name == 'ruff' then
@@ -75,7 +68,7 @@ local enabled_servers = {
     'groovyls',
     "ruff",
     "rust_analyzer",
-    "nil_ls",
+    "nixd",
 }
 
 for _, server in ipairs(enabled_servers) do

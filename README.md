@@ -68,6 +68,7 @@ This repo expects these secret keys in `secrets.yaml`:
 - `exa_api_key`
 - `context7_api_key`
 - `bw_session`
+- `pypi_token`
 
 Generate/import an Age key, then either:
 
@@ -100,6 +101,30 @@ If successful, open a new shell session so all managed environment changes take 
 - `lazy.nvim` bootstraps itself on first launch.
 
 ## Common commands
+
+- Enter the development shell (installs the managed pre-commit hook):
+
+  ```bash
+  nix develop
+  ```
+
+- List task shortcuts:
+
+  ```bash
+  just
+  ```
+
+- Format Nix files:
+
+  ```bash
+  just fmt
+  ```
+
+- Run the reproducible Nix lint checks:
+
+  ```bash
+  just check
+  ```
 
 - Rebuild and switch:
 
