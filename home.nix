@@ -201,7 +201,7 @@ in
     bat = {
       enable = true;
       config = {
-        theme = "TwoDark";
+        theme = "gruvbox-dark";
         italic-text = "always";
         style = "numbers,changes,header";
         pager = "less -R";

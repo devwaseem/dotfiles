@@ -1,3 +1,5 @@
+local palette = require("core.palette")
+
 return {
     "folke/flash.nvim",
     event = "VeryLazy",
@@ -13,20 +15,15 @@ return {
         { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     },
     config = function()
-        if vim.g.colors_name == "material" and pcall(require, 'material') then
-            local colors = require "material.colors"
-            local e = colors.editor
+        local plugin_hls = {
+            FlashBackdrop = { fg = palette.overlay0 },
+            FlashMatch = { bg = palette.surface1, fg = palette.text },
+            FlashLabel = { fg = palette.yellow, bold = true },
+            FlashCurrent = { fg = palette.peach },
+        }
 
-            local plugin_hls = {
-                FlashBackdrop = { fg = e.disabled },
-                FlashMatch = { bg = e.selection, fg = e.fg },
-                FlashLabel = { fg = e.accent, bg = nil, bold = true },
-                FlashCurrent = { fg = e.title }
-            }
-
-            for hl, col in pairs(plugin_hls) do
-                vim.api.nvim_set_hl(0, hl, col)
-            end
+        for hl, colors in pairs(plugin_hls) do
+            vim.api.nvim_set_hl(0, hl, colors)
         end
     end,
 }

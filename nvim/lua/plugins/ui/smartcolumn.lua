@@ -1,11 +1,8 @@
+local palette = require("core.palette")
+
 local function get_highlight_color()
     local highlight_name = "VirtColumn"
-    local color = "grey"
-    if vim.g.colors_name == "material" and pcall(require, 'material') then
-        local colors = require('material.colors')
-        color = colors.editor.line_numbers
-    end
-    vim.cmd("highlight " .. highlight_name .. " ctermbg=0 guifg=" .. color)
+    vim.api.nvim_set_hl(0, highlight_name, { fg = palette.overlay0 })
     return highlight_name
 end
 

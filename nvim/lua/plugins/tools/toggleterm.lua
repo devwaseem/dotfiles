@@ -81,13 +81,11 @@ return {
             }
         }
 
-        if vim.g.colors_name == "material" and pcall(require, 'material') then
-            config.highlights = {
-                Normal = {
-                    guibg = require('material.colors').editor.contrast
-                }
+        config.highlights = {
+            Normal = {
+                guibg = require("core.palette").mantle,
             }
-        end
+        }
 
         require('toggleterm').setup(config)
         setup_scooter()

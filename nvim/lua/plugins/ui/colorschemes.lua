@@ -1,58 +1,68 @@
+local palette = require("core.palette")
+
 return {
     {
-        "marko-cerovac/material.nvim",
+        "catppuccin/nvim",
+        name = "catppuccin",
+        lazy = false,
         priority = 1000,
         config = function()
-            vim.g.material_style = "deep ocean"
-            require('material').setup({
-                async_loading = true,
-                disable = {
-                    background = true,
+            require("catppuccin").setup({
+                flavour = "mocha",
+                background = {
+                    light = "latte",
+                    dark = "mocha",
                 },
-
-                custom_colors = function(colors)
-                    colors.editor.accent = colors.main.darkyellow
-                end,
-
-                contrast = {
-                    terminal = true,             -- Enable contrast for the built-in terminal
-                    sidebars = true,             -- Enable contrast for sidebar-like windows ( for example Nvim-Tree )
-                    floating_windows = true,     -- Enable contrast for floating windows
-                    cursor_line = false,         -- Enable darker background for the cursor line
-                    lsp_virtual_text = true,     -- Enable contrasted background for lsp virtual text
-                    non_current_windows = false, -- Enable contrasted background for non-current windows
-                    filetypes = {},              -- Specify which filetypes get the contrasted (darker) background
+                transparent_background = false,
+                term_colors = true,
+                no_bold = true,
+                no_italic = true,
+                no_underline = true,
+                color_overrides = {
+                    mocha = palette,
                 },
-
-                styles = {
-                    comments = { italic = true },
-                    strings = {},
-                    keywords = { italic = true, bold = false },
-                    functions = { undercurl = false },
-                    variables = { bold = false },
-                    operators = { italic = true },
-                    types = { italic = true },
+                lsp_styles = {
+                    inlay_hints = {
+                        background = true,
+                    },
                 },
-
-                plugins = {
-                    "dap",
-                    "blink",
-                    "eyeliner",
-                    "fidget",
-                    "flash",
-                    "gitsigns",
-                    "harpoon",
-                    "illuminate",
-                    "mini",
-                    "neogit",
-                    "neotest",
-                    "neo-tree",
-                    "nvim-web-devicons",
-                    "noice",
-                    "rainbow-delimiters",
-                    "telescope",
-                    "trouble",
-                    "which-key",
+                auto_integrations = true,
+                integrations = {
+                    blink_cmp = {
+                        style = "bordered",
+                    },
+                    gitsigns = true,
+                    flash = true,
+                    neotree = true,
+                    render_markdown = true,
+                    snacks = {
+                        enabled = true,
+                    },
+                    telescope = {
+                        enabled = true,
+                    },
+                    treesitter_context = true,
+                    which_key = true,
+                },
+                highlight_overrides = {
+                    mocha = function(colors)
+                        return {
+                            NormalFloat = { bg = colors.mantle },
+                            FloatBorder = { bg = colors.mantle, fg = colors.surface2 },
+                            FloatTitle = { bg = colors.mantle, fg = colors.text },
+                            Pmenu = { bg = colors.mantle, fg = colors.text },
+                            PmenuSel = { bg = colors.surface0, fg = colors.text },
+                            PmenuSbar = { bg = colors.surface0 },
+                            PmenuThumb = { bg = colors.surface2 },
+                            LineNr = { fg = colors.overlay0 },
+                            CursorLineNr = { fg = colors.text },
+                            IblIndent = { fg = colors.surface0 },
+                            IblScope = { fg = colors.overlay0 },
+                            GitSignsChange = { fg = colors.peach },
+                            VertSplit = { bg = colors.base, fg = colors.surface0 },
+                            WinSeparator = { bg = colors.base, fg = colors.surface0 },
+                        }
+                    end,
                 },
             })
         end,

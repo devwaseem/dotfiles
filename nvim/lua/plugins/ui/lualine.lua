@@ -1,4 +1,5 @@
 local icons = require("core.icons")
+local palette = require("core.palette")
 
 vim.g.show_file_metadata = false
 
@@ -36,7 +37,7 @@ return {
     event = "VeryLazy",
     dependencies = {
         "nvim-tree/nvim-web-devicons",
-        "marko-cerovac/material.nvim",
+        "catppuccin/nvim",
         {
             "letieu/harpoon-lualine",
             dependencies = {
@@ -48,46 +49,38 @@ return {
         },
     },
     config = function()
-        local custom_theme
-
-        if vim.g.colors_name == "material" and pcall(require, "material") then
-            local colors = require("material.colors")
-            local main = colors.main
-            local editor = colors.editor
-            local none = "None"
-
-            custom_theme = {
-                normal = {
-                    a = { fg = editor.fg, bg = none, gui = "bold" },
-                    b = { fg = editor.line_numbers, bg = none },
-                    c = { fg = editor.line_numbers, bg = none },
-                    z = { fg = editor.line_numbers, bg = none, gui = "bold" },
-                },
-                insert = {
-                    a = { fg = main.black, bg = main.darkgreen, gui = "bold" },
-                    b = { fg = editor.line_numbers, bg = none },
-                    c = { fg = editor.line_numbers, bg = none },
-                    z = { fg = main.darkgreen, bg = none, gui = "bold" },
-                },
-                visual = {
-                    a = { fg = main.black, bg = main.darkred, gui = "bold" },
-                    b = { fg = editor.line_numbers, bg = none },
-                    c = { fg = editor.line_numbers, bg = none },
-                    z = { fg = main.darkred, bg = none, gui = "bold" },
-                },
-                replace = {
-                    a = { fg = main.black, bg = main.paleblue, gui = "bold" },
-                    b = { fg = editor.line_numbers, bg = none },
-                    c = { fg = editor.line_numbers, bg = none },
-                    z = { fg = main.paleblue, bg = none, gui = "bold" },
-                },
-                inactive = {
-                    a = { fg = editor.line_numbers, bg = none },
-                    b = { fg = editor.line_numbers, bg = none },
-                    c = { fg = editor.line_numbers, bg = none },
-                },
-            }
-        end
+        local none = "NONE"
+        local custom_theme = {
+            normal = {
+                a = { fg = palette.text, bg = none },
+                b = { fg = palette.overlay1, bg = none },
+                c = { fg = palette.overlay1, bg = none },
+                z = { fg = palette.overlay1, bg = none },
+            },
+            insert = {
+                a = { fg = palette.base, bg = palette.green },
+                b = { fg = palette.overlay1, bg = none },
+                c = { fg = palette.overlay1, bg = none },
+                z = { fg = palette.green, bg = none },
+            },
+            visual = {
+                a = { fg = palette.base, bg = palette.red },
+                b = { fg = palette.overlay1, bg = none },
+                c = { fg = palette.overlay1, bg = none },
+                z = { fg = palette.red, bg = none },
+            },
+            replace = {
+                a = { fg = palette.base, bg = palette.blue },
+                b = { fg = palette.overlay1, bg = none },
+                c = { fg = palette.overlay1, bg = none },
+                z = { fg = palette.blue, bg = none },
+            },
+            inactive = {
+                a = { fg = palette.overlay0, bg = none },
+                b = { fg = palette.overlay0, bg = none },
+                c = { fg = palette.overlay0, bg = none },
+            },
+        }
 
         vim.keymap.set("n", "<leader>uF", toggle_file_metadata, { desc = "Toggle status metadata" })
 
@@ -190,7 +183,7 @@ return {
                     {
                         require("lazy.status").updates,
                         cond = require("lazy.status").has_updates,
-                        color = { fg = "#d9a441" },
+                        color = { fg = palette.yellow },
                     },
                 },
                 lualine_z = {

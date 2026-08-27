@@ -1,4 +1,8 @@
-_: {
+_:
+let
+  palette = import ./theme.nix;
+in
+{
   programs.lazygit = {
     enable = true;
     enableZshIntegration = true;
@@ -14,18 +18,18 @@ _: {
       };
       gui = {
         theme = {
-          activeBorderColor = [ "#89b4fa" ];
-          inactiveBorderColor = [ "#a6adc8" ];
-          optionsTextColor = [ "#89b4fa" ];
-          selectedLineBgColor = [ "#313244" ];
-          cherryPickedCommitBgColor = [ "#45475a" ];
-          cherryPickedCommitFgColor = [ "#89b4fa" ];
-          unstagedChangesColor = [ "#f38ba8" ];
-          defaultFgColor = [ "#cdd6f4" ];
-          searchingActiveBorderColor = [ "#f9e2af" ];
+          activeBorderColor = [ palette.blue ];
+          inactiveBorderColor = [ palette.overlay1 ];
+          optionsTextColor = [ palette.blue ];
+          selectedLineBgColor = [ palette.surface0 ];
+          cherryPickedCommitBgColor = [ palette.surface1 ];
+          cherryPickedCommitFgColor = [ palette.blue ];
+          unstagedChangesColor = [ palette.red ];
+          defaultFgColor = [ palette.text ];
+          searchingActiveBorderColor = [ palette.yellow ];
         };
         authorColors = {
-          "*" = "#b4befe";
+          "*" = palette.lavender;
         };
       };
     };

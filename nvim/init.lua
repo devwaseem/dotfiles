@@ -57,7 +57,7 @@ require("lazy").setup(
     })
 
 
-vim.cmd.colorscheme "material"
+vim.cmd.colorscheme "catppuccin-nvim"
 require "core.highlights"
 
 vim.opt.mouse = "a"

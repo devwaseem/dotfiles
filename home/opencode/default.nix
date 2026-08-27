@@ -1,4 +1,70 @@
-_: {
+_:
+let
+  palette = import ../theme.nix;
+in
+{
+  xdg.configFile."opencode/tui.json".text = builtins.toJSON {
+    "$schema" = "https://opencode.ai/tui.json";
+    theme = "shared-gruvbox";
+  };
+
+  xdg.configFile."opencode/themes/shared-gruvbox.json".text = builtins.toJSON {
+    "$schema" = "https://opencode.ai/theme.json";
+    defs = palette;
+    theme = {
+      primary = "blue";
+      secondary = "mauve";
+      accent = "teal";
+      error = "red";
+      warning = "yellow";
+      success = "green";
+      info = "blue";
+      text = "text";
+      textMuted = "overlay1";
+      background = "base";
+      backgroundPanel = "mantle";
+      backgroundElement = "surface0";
+      border = "surface1";
+      borderActive = "blue";
+      borderSubtle = "surface0";
+      diffAdded = "green";
+      diffRemoved = "red";
+      diffContext = "overlay1";
+      diffHunkHeader = "blue";
+      diffHighlightAdded = "green";
+      diffHighlightRemoved = "red";
+      diffAddedBg = "surface0";
+      diffRemovedBg = "surface0";
+      diffContextBg = "mantle";
+      diffLineNumber = "overlay0";
+      diffAddedLineNumberBg = "surface0";
+      diffRemovedLineNumberBg = "surface0";
+      markdownText = "text";
+      markdownHeading = "yellow";
+      markdownLink = "blue";
+      markdownLinkText = "teal";
+      markdownCode = "green";
+      markdownBlockQuote = "overlay1";
+      markdownEmph = "peach";
+      markdownStrong = "yellow";
+      markdownHorizontalRule = "surface2";
+      markdownListItem = "blue";
+      markdownListEnumeration = "teal";
+      markdownImage = "mauve";
+      markdownImageText = "teal";
+      markdownCodeBlock = "text";
+      syntaxComment = "overlay1";
+      syntaxKeyword = "red";
+      syntaxFunction = "green";
+      syntaxVariable = "text";
+      syntaxString = "teal";
+      syntaxNumber = "mauve";
+      syntaxType = "yellow";
+      syntaxOperator = "peach";
+      syntaxPunctuation = "subtext1";
+    };
+  };
+
   programs.opencode = {
     enable = true;
     agents = {

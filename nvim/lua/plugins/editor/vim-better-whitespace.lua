@@ -1,10 +1,10 @@
+local palette = require("core.palette")
+
 return {
     'ntpeters/vim-better-whitespace',
     event = "BufReadPost",
     config = function()
-        if vim.g.colors_name == "material" and pcall(require, 'material') then
-            vim.cmd("highlight ExtraWhitespace guibg=" .. require('material.colors').main.red)
-        end
+        vim.api.nvim_set_hl(0, "ExtraWhitespace", { bg = palette.red })
 
         vim.keymap.set('n', '<leader>uw', '<cmd>ToggleWhitespace<cr>')
 

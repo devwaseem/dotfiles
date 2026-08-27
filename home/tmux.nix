@@ -1,4 +1,7 @@
 { pkgs, ... }:
+let
+  palette = import ./theme.nix;
+in
 {
   programs.tmux = {
     enable = true;
@@ -25,7 +28,9 @@
       {
         plugin = tmux-thumbs;
         extraConfig = ''
-          set -g @thumbs-command 'echo -n {} | ${if pkgs.stdenv.hostPlatform.isDarwin then "pbcopy" else "wl-copy"}'
+          set -g @thumbs-command 'echo -n {} | ${
+            if pkgs.stdenv.hostPlatform.isDarwin then "pbcopy" else "wl-copy"
+          }'
           set -g @thumbs-position off_left
         '';
       }
@@ -33,17 +38,17 @@
         plugin = dotbar;
         extraConfig = ''
           set -g @tmux-dotbar-bg default
-          set -g @tmux-dotbar-fg "#585b70"
-          set -g @tmux-dotbar-fg-current "#cdd6f4"
-          set -g @tmux-dotbar-fg-session "#9399b2"
-          set -g @tmux-dotbar-fg-prefix "#cba6f7"
+          set -g @tmux-dotbar-fg "${palette.overlay0}"
+          set -g @tmux-dotbar-fg-current "${palette.text}"
+          set -g @tmux-dotbar-fg-session "${palette.overlay1}"
+          set -g @tmux-dotbar-fg-prefix "${palette.mauve}"
           set -g @tmux-dotbar-maximized-icon "󰊓"
           set -g @tmux-dotbar-position top
           set -g @tmux-dotbar-right "false"
 
-          set -g mode-style "fg=#000000,bg=#ffd700"
+          set -g mode-style "fg=${palette.base},bg=${palette.yellow}"
           set -g status-style bg=default
-          set -g status-style fg=#c5c6c7
+          set -g status-style fg=${palette.text}
         '';
       }
       {
@@ -84,7 +89,7 @@
       set -g visual-silence off
       set -g bell-action none
       setw -g monitor-activity on
-      set -g window-status-activity-style "fg=#fab387,bold"
+      set -g window-status-activity-style "fg=${palette.peach},bold"
 
       # Custom Splits (Opening in CWD)
       bind |   split-window -h -c "#{pane_current_path}"
