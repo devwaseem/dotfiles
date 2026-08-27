@@ -246,6 +246,7 @@ in
     ./home/lazygit.nix
     ./home/tmux.nix
     ./home/ghostty.nix
+    ./home/pi.nix
     ./home/keyboard.nix
     ./home/herdr.nix
   ];
