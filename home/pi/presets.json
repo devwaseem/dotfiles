@@ -1,0 +1,59 @@
+{
+  "plan": {
+    "thinkingLevel": "high",
+    "tools": [
+      "read",
+      "bash",
+      "grep",
+      "find",
+      "ls",
+      "ffgrep",
+      "fffind",
+      "symbol_search",
+      "project_report",
+      "module_report",
+      "read_symbol",
+      "read_enclosing",
+      "lsp_diagnostics",
+      "lens_diagnostics"
+    ],
+    "readOnly": true,
+    "instructions": "WORKFLOW: PLAN\nInspect the repository thoroughly. Do not edit files or run modifying commands. Resolve questions from the repository when possible. Identify risks, affected files, tests, and validation. Return an actionable plan."
+  },
+  "build": {
+    "thinkingLevel": "medium",
+    "restoreTools": true,
+    "instructions": "WORKFLOW: BUILD\nKeep changes scoped. Inspect before editing. Preserve existing user changes. Validate proportionally. Report commands not run."
+  },
+  "review": {
+    "thinkingLevel": "high",
+    "tools": [
+      "read",
+      "bash",
+      "grep",
+      "find",
+      "ls",
+      "ffgrep",
+      "fffind",
+      "symbol_search",
+      "project_report",
+      "module_report",
+      "read_symbol",
+      "read_enclosing",
+      "lsp_diagnostics",
+      "lens_diagnostics"
+    ],
+    "readOnly": true,
+    "instructions": "WORKFLOW: REVIEW\nReview the current implementation and diff. Prioritize correctness, regressions, security, and missing tests. Provide concrete findings with file references. Do not edit files unless the user explicitly switches to build mode."
+  },
+  "fast": {
+    "thinkingLevel": "low",
+    "restoreTools": true,
+    "instructions": "WORKFLOW: FAST\nExecute concisely. Use this mode only for small, well-scoped tasks. Prefer the shortest correct change and focused validation."
+  },
+  "deep": {
+    "thinkingLevel": "high",
+    "restoreTools": true,
+    "instructions": "WORKFLOW: DEEP\nUse careful, long-horizon reasoning for difficult architecture, debugging, and cross-cutting work. Trace behavior end to end, test assumptions, and validate risks before concluding."
+  }
+}

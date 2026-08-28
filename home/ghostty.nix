@@ -58,6 +58,7 @@ in
       background-blur = 0;
 
       # macos
+      keybind = [ "cmd+k=text:\\x1b[107;7u" ];
       title = "";
       window-decoration = "auto";
       macos-titlebar-style = "hidden";

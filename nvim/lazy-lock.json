@@ -33,6 +33,7 @@
   "harpoon": { "branch": "harpoon2", "commit": "87b1a3506211538f460786c23f98ec63ad9af4e5" },
   "harpoon-lualine": { "branch": "master", "commit": "215c0847dfb787b19268f7b42eed83bdcf06b966" },
   "helpview.nvim": { "branch": "main", "commit": "06006b471890f19efeb199ffab5da49a2d624619" },
+  "herdr-nvim": { "branch": "main", "commit": "41c30f528e645cecb1e387c46de9dc416ecf978e" },
   "hi-my-words.nvim": { "branch": "main", "commit": "d09212d54e16dd6064dac6a257a96aca5ed88b4b" },
   "hierarchy.nvim": { "branch": "master", "commit": "6e5d8d0970d08bf47699c03ced093020d77527db" },
   "highlight-undo.nvim": { "branch": "main", "commit": "ee32e12693d70e66f954d09a504a7371d110fc27" },

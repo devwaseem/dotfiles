@@ -10,8 +10,7 @@ let
 in
 {
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    pkgs.lib.getName pkg == "antigravity-cli";
+  nixpkgs.config.allowUnfreePredicate = pkg: pkgs.lib.getName pkg == "antigravity-cli";
 
   # Fonts are symlinked into /Library/Fonts/Nix Fonts automatically
   environment.systemPackages = with pkgs; [

@@ -1,0 +1,157 @@
+import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import type { SidebarContext } from "./types.ts";
+import { renderSidebar } from "./sidebar.ts";
+import { dim } from "./colors.ts";
+
+// No background by default so terminal transparency shows through.
+// Set PI_SIDEBAR_BG="#rrggbb" to paint an opaque panel (hides scroll flash).
+const SIDEBAR_BG = (() => {
+  const hex = process.env["PI_SIDEBAR_BG"]?.replace("#", "");
+  if (!/^[0-9a-fA-F]{6}$/.test(hex ?? "")) return "";
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  return `\x1b[48;2;${r};${g};${b}m`;
+})();
+const BG_RESET = "\x1b[49m";
+
+function moveCursor(row: number, col: number): string {
+  return `\x1b[${row};${col}H`;
+}
+
+function descriptorFor(
+  obj: Record<string, unknown>,
+  key: string,
+): PropertyDescriptor | undefined {
+  let target: object | null = obj;
+  while (target) {
+    const d = Object.getOwnPropertyDescriptor(target, key);
+    if (d) return d;
+    target = Object.getPrototypeOf(target);
+  }
+  return undefined;
+}
+
+export class SidebarCompositor {
+  private tui: any;
+  private terminal: any;
+  private getCtx: () => SidebarContext;
+  private originalColumnsDesc: PropertyDescriptor | undefined;
+  private originalDoRender: (() => void) | null = null;
+  private originalWrite: (data: string) => void;
+  private disposed = false;
+
+  private readonly sidebarWidth: number;
+
+  constructor(tui: any, getCtx: () => SidebarContext, sidebarWidth = 40) {
+    this.tui = tui;
+    this.terminal = tui.terminal;
+    this.getCtx = getCtx;
+    this.originalWrite = this.terminal.write.bind(this.terminal);
+    this.sidebarWidth = sidebarWidth;
+  }
+
+  install(): void {
+    // Narrow terminal.columns so pi renders in the left portion only.
+    this.originalColumnsDesc = descriptorFor(this.terminal, "columns");
+    const origDesc = this.originalColumnsDesc;
+    const terminal = this.terminal;
+    const sidebarWidth = this.sidebarWidth;
+
+    Object.defineProperty(terminal, "columns", {
+      configurable: true,
+      enumerable: true,
+      get() {
+        const d = origDesc;
+        const raw = d?.get
+          ? (d.get.call(terminal) ?? 80)
+          : typeof d?.value === "number"
+            ? d.value
+            : 80;
+        return Math.max(1, raw - sidebarWidth - 1);
+      },
+    });
+
+    // Paint sidebar after every pi render cycle
+    if (typeof this.tui.doRender === "function") {
+      this.originalDoRender = this.tui.doRender.bind(this.tui);
+      this.tui.doRender = () => {
+        if (this.disposed) {
+          this.originalDoRender?.();
+          return;
+        }
+        this.originalDoRender!();
+        this.paint();
+      };
+    }
+  }
+
+  paint(): void {
+    if (this.disposed) return;
+    const rawRows = this.terminal.rows;
+    const d = this.originalColumnsDesc;
+    const rawCols = d?.get
+      ? (d.get.call(this.terminal) ?? 80)
+      : typeof d?.value === "number"
+        ? d.value
+        : 80;
+    const sw = this.sidebarWidth;
+    const sepCol = rawCols - sw;
+    const sidebarCol = sepCol + 1;
+    const ctx = this.getCtx();
+    const lines = renderSidebar(ctx, sw);
+
+    let buf = "\x1b[?2026h"; // begin synchronized output
+    buf += "\x1b7"; // save cursor (DECSC)
+    buf += "\x1b[?7l"; // disable auto-wrap
+
+    // Format cwd for bottom row: collapse home dir, truncate from left if needed
+    const cwd = ctx.cwd ?? "";
+    const home = process.env["HOME"] ?? "";
+    const cwdDisplay =
+      home && cwd.startsWith(home) ? "~" + cwd.slice(home.length) : cwd;
+    const cwdTruncated =
+      visibleWidth(cwdDisplay) > sw - 1
+        ? "…" + cwdDisplay.slice(-(sw - 2))
+        : cwdDisplay;
+    const cwdLine = dim(" " + cwdTruncated);
+
+    for (let row = 1; row <= rawRows; row++) {
+      buf += moveCursor(row, sepCol);
+      buf += dim("│");
+      buf += moveCursor(row, sidebarCol);
+      buf += SIDEBAR_BG;
+      if (row === rawRows && cwd) {
+        buf += truncateToWidth(cwdLine, sw, "", true);
+      } else {
+        const line = lines[row - 1];
+        buf +=
+          line === undefined
+            ? " ".repeat(sw)
+            : truncateToWidth(line, sw, "", true);
+      }
+      buf += BG_RESET;
+    }
+
+    buf += "\x1b[?7h"; // enable auto-wrap
+    buf += "\x1b8"; // restore cursor (DECRC)
+    buf += "\x1b[?2026l"; // end synchronized output
+
+    this.originalWrite(buf);
+  }
+
+  dispose(): void {
+    if (this.disposed) return;
+    this.disposed = true;
+
+    if (this.originalColumnsDesc) {
+      Object.defineProperty(this.terminal, "columns", this.originalColumnsDesc);
+    } else {
+      Reflect.deleteProperty(this.terminal, "columns");
+    }
+
+    if (this.originalDoRender !== null) {
+      this.tui.doRender = this.originalDoRender;
+    }
+  }
+}

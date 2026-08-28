@@ -19,7 +19,6 @@ in
       EDITOR = "nvim";
       XDG_CONFIG_HOME = "${homeDir}/.config";
       SOPS_AGE_KEY_FILE = "${homeDir}/.config/sops/age/keys.txt";
-      LZ_CONFIG_DIR = "${homeDir}/.config/lazygit";
       COLORTERM = "truecolor";
       TERM = "xterm-256color";
       ZK_PATH = "${homeDir}/Zettelkasten";
