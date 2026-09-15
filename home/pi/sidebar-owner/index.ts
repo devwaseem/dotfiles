@@ -14,6 +14,7 @@ import { setPiTheme } from "./colors.ts";
 import { createSystemSampler } from "./system.ts";
 import { replayTodos, todosFromDetails } from "./todo-state.ts";
 import { DiagnosticState } from "./diagnostics.ts";
+import { splitSidebarWidth } from "./split-layout.ts";
 
 const TOOL_LOG_MAX = 10;
 const SUBAGENT_TOOL_PATTERN = /^(task|dispatch|agent)/i;
@@ -260,28 +261,44 @@ export default function piSidebar(pi: ExtensionAPI) {
   let requestRender: (() => void) | null = null;
   let tuiRef: any = null;
   let compositorRef: SidebarCompositor | null = null;
+  let sidebarOverride: { render(width: number): string[] } | null = null;
+
+  const rebuildCompositor = () => {
+    compositorRef?.dispose();
+    compositorRef = null;
+    if (!tuiRef || (!sidebarEnabled && !sidebarOverride)) {
+      requestRender?.();
+      return;
+    }
+
+    compositorRef = new SidebarCompositor(
+      tuiRef,
+      () => buildSidebarContext(currentCwd),
+      sidebarOverride ? splitSidebarWidth : sidebarWidth,
+      () => sidebarOverride,
+    );
+    compositorRef.install();
+    requestRender?.();
+  };
 
   pi.events.on("pilens:diagnostics", (payload) => {
     if (diagnostics.replace(payload)) requestRender?.();
   });
 
+  pi.events.on("btw:sidebar", (payload: any) => {
+    const nextOverride = payload?.component ?? null;
+    if (nextOverride === sidebarOverride) {
+      requestRender?.();
+      return;
+    }
+    sidebarOverride = nextOverride;
+    rebuildCompositor();
+  });
+
   const setSidebarEnabled = (enabled: boolean, ctx: any) => {
     sidebarEnabled = enabled;
     saveSidebarSettings({ enabled: sidebarEnabled, width: sidebarWidth });
-
-    if (!sidebarEnabled) {
-      compositorRef?.dispose();
-      compositorRef = null;
-    } else if (tuiRef && !compositorRef) {
-      const comp = new SidebarCompositor(
-        tuiRef,
-        () => buildSidebarContext(currentCwd),
-        sidebarWidth,
-      );
-      comp.install();
-      compositorRef = comp;
-      requestRender?.();
-    }
+    rebuildCompositor();
 
     (ctx as any).ui?.notify?.(
       `Sidebar ${sidebarEnabled ? "enabled" : "disabled"}`,
@@ -406,15 +423,7 @@ export default function piSidebar(pi: ExtensionAPI) {
         setPiTheme(_theme);
         tuiRef = tui;
 
-        if (sidebarEnabled) {
-          const comp = new SidebarCompositor(
-            tui,
-            () => buildSidebarContext(currentCwd),
-            sidebarWidth,
-          );
-          comp.install();
-          compositorRef = comp;
-        }
+        rebuildCompositor();
 
         return {
           dispose() {
@@ -684,18 +693,7 @@ export default function piSidebar(pi: ExtensionAPI) {
         }
         sidebarWidth = n;
         saveSidebarSettings({ enabled: sidebarEnabled, width: sidebarWidth });
-        if (compositorRef && tuiRef) {
-          compositorRef.dispose();
-          compositorRef = null;
-          const comp = new SidebarCompositor(
-            tuiRef,
-            () => buildSidebarContext(currentCwd),
-            sidebarWidth,
-          );
-          comp.install();
-          compositorRef = comp;
-          requestRender?.();
-        }
+        rebuildCompositor();
         (ctx as any).ui?.notify?.(`Sidebar width set to ${n}`, "info");
         return;
       }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   palette = import ./theme.nix;
   toml = pkgs.formats.toml { };
@@ -182,12 +182,15 @@ in
 
       toast = {
         delivery = "system";
-        delay_seconds = 2;
+        delay_seconds = 0;
         herdr.position = "bottom-right";
       };
 
       sound.enabled = false;
     };
   };
+  home.activation.herdrOmpIntegration = lib.hm.dag.entryAfter [ "ompConfig" ] ''
+    run ${pkgs.herdr}/bin/herdr integration install omp
+  '';
 
 }

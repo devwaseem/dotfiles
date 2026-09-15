@@ -13,10 +13,13 @@ in
   home = {
     file = {
       ".pi/agent/extensions/sidebar-owner".source = ./pi/sidebar-owner;
+      ".pi/agent/extensions/btw-split".source = ./pi/extensions/btw-split;
       ".pi/agent/extensions/workflow-presets".source = ./pi/extensions/workflow-presets;
       ".pi/agent/extensions/herdr-companion".source = ./pi/extensions/herdr-companion;
+      ".pi/agent/extensions/herdr-question-state".source = ./pi/extensions/herdr-question-state;
       ".pi/agent/extensions/decision-log".source = ./pi/extensions/decision-log;
       ".pi/agent/presets.json".source = ./pi/presets.json;
+      ".pi/agent/prompts/todos-clear.md".source = ./pi/prompts/todos-clear.md;
       ".pi/agent/mcp.json".text = builtins.toJSON {
         mcpServers = {
           context7 = {
@@ -118,11 +121,26 @@ in
         pi_settings_tmp="$(${pkgs.coreutils}/bin/mktemp)"
         ${pkgs.jq}/bin/jq --arg theme ${lib.escapeShellArg themeName} '
           .theme = $theme
-          | .packages = ((.packages // []) | map(select(
-              ((if type == "string" then . else (.source // "") end)
-                | test("^npm:(statusline-pi|pi-sidebar-tui)(@.*)?$"))
-              | not
-            )))
+          | .packages = ((.packages // [])
+            | map(
+                if ((if type == "string" then . else (.source // "") end)
+                  | test("^npm:@narumitw/pi-btw(@.*)?$"))
+                then { source: "npm:@narumitw/pi-btw@0.55.4", extensions: [] }
+                else .
+                end
+              )
+            | if any(.[];
+                ((if type == "string" then . else (.source // "") end)
+                  | test("^npm:@narumitw/pi-btw(@.*)?$")))
+              then .
+              else . + [{ source: "npm:@narumitw/pi-btw@0.55.4", extensions: [] }]
+              end
+            | map(select(
+                ((if type == "string" then . else (.source // "") end)
+                  | test("^npm:(statusline-pi|pi-sidebar-tui)(@.*)?$"))
+                | not
+              ))
+          )
         ' "$pi_settings" > "$pi_settings_tmp"
         if ! ${pkgs.diffutils}/bin/cmp -s "$pi_settings" "$pi_settings_tmp"; then
           ${pkgs.coreutils}/bin/mv "$pi_settings_tmp" "$pi_settings"

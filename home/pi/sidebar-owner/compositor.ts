@@ -1,7 +1,14 @@
+// @ts-nocheck — Pi resolves its bundled extension types at runtime.
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import type { SidebarContext } from "./types.ts";
 import { renderSidebar } from "./sidebar.ts";
 import { dim } from "./colors.ts";
+
+interface SidebarOverride {
+  render(width: number): string[];
+}
+
+type SidebarWidth = number | ((columns: number) => number);
 
 // No background by default so terminal transparency shows through.
 // Set PI_SIDEBAR_BG="#rrggbb" to paint an opaque panel (hides scroll flash).
@@ -17,6 +24,16 @@ const BG_RESET = "\x1b[49m";
 
 function moveCursor(row: number, col: number): string {
   return `\x1b[${row};${col}H`;
+}
+
+function fitLine(line: string, width: number): string {
+  const truncated = truncateToWidth(line, width, "", true);
+  return truncated + " ".repeat(Math.max(0, width - visibleWidth(truncated)));
+}
+
+function resolveWidth(width: SidebarWidth, columns: number): number {
+  const requested = typeof width === "function" ? width(columns) : width;
+  return Math.max(1, Math.min(requested, Math.max(1, columns - 1)));
 }
 
 function descriptorFor(
@@ -36,17 +53,24 @@ export class SidebarCompositor {
   private tui: any;
   private terminal: any;
   private getCtx: () => SidebarContext;
+  private getOverride: () => SidebarOverride | null;
   private originalColumnsDesc: PropertyDescriptor | undefined;
   private originalDoRender: (() => void) | null = null;
   private originalWrite: (data: string) => void;
   private disposed = false;
 
-  private readonly sidebarWidth: number;
+  private readonly sidebarWidth: SidebarWidth;
 
-  constructor(tui: any, getCtx: () => SidebarContext, sidebarWidth = 40) {
+  constructor(
+    tui: any,
+    getCtx: () => SidebarContext,
+    sidebarWidth: SidebarWidth = 40,
+    getOverride: () => SidebarOverride | null = () => null,
+  ) {
     this.tui = tui;
     this.terminal = tui.terminal;
     this.getCtx = getCtx;
+    this.getOverride = getOverride;
     this.originalWrite = this.terminal.write.bind(this.terminal);
     this.sidebarWidth = sidebarWidth;
   }
@@ -68,7 +92,7 @@ export class SidebarCompositor {
           : typeof d?.value === "number"
             ? d.value
             : 80;
-        return Math.max(1, raw - sidebarWidth - 1);
+        return Math.max(1, raw - resolveWidth(sidebarWidth, raw) - 1);
       },
     });
 
@@ -95,11 +119,12 @@ export class SidebarCompositor {
       : typeof d?.value === "number"
         ? d.value
         : 80;
-    const sw = this.sidebarWidth;
-    const sepCol = rawCols - sw;
+    const sw = resolveWidth(this.sidebarWidth, rawCols);
+    const sepCol = Math.max(1, rawCols - sw);
     const sidebarCol = sepCol + 1;
     const ctx = this.getCtx();
-    const lines = renderSidebar(ctx, sw);
+    const override = this.getOverride();
+    const lines = override?.render(sw) ?? renderSidebar(ctx, sw);
 
     let buf = "\x1b[?2026h"; // begin synchronized output
     buf += "\x1b7"; // save cursor (DECSC)
@@ -121,14 +146,11 @@ export class SidebarCompositor {
       buf += dim("│");
       buf += moveCursor(row, sidebarCol);
       buf += SIDEBAR_BG;
-      if (row === rawRows && cwd) {
-        buf += truncateToWidth(cwdLine, sw, "", true);
+      if (!override && row === rawRows && cwd) {
+        buf += fitLine(cwdLine, sw);
       } else {
         const line = lines[row - 1];
-        buf +=
-          line === undefined
-            ? " ".repeat(sw)
-            : truncateToWidth(line, sw, "", true);
+        buf += line === undefined ? " ".repeat(sw) : fitLine(line, sw);
       }
       buf += BG_RESET;
     }

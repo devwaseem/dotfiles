@@ -6,7 +6,6 @@ in
 {
 
   fonts.fontconfig.enable = true;
-  programs.qmd.enable = true;
 
   home = {
     stateVersion = "25.05";
@@ -112,6 +111,8 @@ in
 
   programs = {
     home-manager.enable = true;
+    omp.enable = true;
+    qmd.enable = true;
 
     git = {
       enable = true;

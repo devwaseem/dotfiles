@@ -47,7 +47,7 @@ export function renderTodosPanel(ctx: SidebarContext, width: number): string[] {
     return lines;
   }
 
-  for (const todo of todos) {
+  for (const todo of [...todos].reverse()) {
     lines.push(renderTodoLine(todo, width));
   }
 

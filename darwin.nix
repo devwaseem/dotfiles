@@ -14,11 +14,13 @@ in
 
   # Fonts are symlinked into /Library/Fonts/Nix Fonts automatically
   environment.systemPackages = with pkgs; [
+    azure-cli
     cmake
     coreutils
     curl
     iterm2
     lilex
+    ollama
     pam-reattach
     python3
     sops
@@ -79,6 +81,7 @@ in
       "libmagic"
       "helm" # not available for darwin in nix pkgs yet
       "kubelogin"
+      "llama.cpp"
     ];
     casks = [
       "claude-code"

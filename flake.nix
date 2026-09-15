@@ -23,6 +23,7 @@
       url = "github:tobi/qmd";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    omp.url = "github:can1357/oh-my-pi";
   };
 
   outputs =
@@ -34,6 +35,7 @@
       home-manager,
       git-hooks-nix,
       qmd,
+      omp,
     }:
     let
       system = "aarch64-darwin";
@@ -84,9 +86,12 @@
                 useUserPackages = true;
                 backupFileExtension = "nix.bk";
                 users.waseemakram = {
+                  # OMP embeds this input's libiconv path in its extracted native addon.
+                  home.packages = [ omp.inputs.nixpkgs.legacyPackages.${system}.libiconv ];
                   imports = [
                     sops-nix.homeManagerModules.sops
                     qmd.homeModules.default
+                    omp.homeManagerModules.default
                     ./home.nix
                   ];
                 };
