@@ -125,6 +125,7 @@
           # External Integrations
           [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
           [ -e "$HOME/.iterm2_shell_integration.zsh" ] && source "$HOME/.iterm2_shell_integration.zsh"
+          [ -f "$HOME/.local/share/ghost-shell/ghost-shell.plugin.zsh" ] && source "$HOME/.local/share/ghost-shell/ghost-shell.plugin.zsh"
 
           # Path additions
           export PATH="$HOME/.local/bin:$HOME/.spicetify:$PNPM_HOME:$PATH:$BUN_INSTALL/bin"

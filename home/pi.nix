@@ -6,7 +6,7 @@
 }:
 let
   palette = import ./theme.nix;
-  themeName = "shared-gruvbox";
+  themeName = "catppuccin-mocha";
   settingsPath = "${config.home.homeDirectory}/.pi/agent/settings.json";
 in
 {

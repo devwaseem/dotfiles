@@ -13,7 +13,7 @@ return {
                     light = "latte",
                     dark = "mocha",
                 },
-                transparent_background = false,
+                transparent_background = true,
                 term_colors = true,
                 no_bold = true,
                 no_italic = true,

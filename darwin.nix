@@ -7,6 +7,16 @@
 
 let
   user = "waseemakram";
+  azureFunctionsCoreTools = pkgs.azure-functions-core-tools.override {
+    buildDotnetModule =
+      args:
+      pkgs.buildDotnetModule (
+        args
+        // {
+          dotnet-runtime = pkgs.dotnetCorePackages.aspnetcore_8_0;
+        }
+      );
+  };
 in
 {
 
@@ -15,6 +25,7 @@ in
   # Fonts are symlinked into /Library/Fonts/Nix Fonts automatically
   environment.systemPackages = with pkgs; [
     azure-cli
+    azureFunctionsCoreTools
     cmake
     coreutils
     curl

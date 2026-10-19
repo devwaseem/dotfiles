@@ -5,10 +5,10 @@ in
 {
   xdg.configFile."opencode/tui.json".text = builtins.toJSON {
     "$schema" = "https://opencode.ai/tui.json";
-    theme = "shared-gruvbox";
+    theme = "catppuccin-mocha";
   };
 
-  xdg.configFile."opencode/themes/shared-gruvbox.json".text = builtins.toJSON {
+  xdg.configFile."opencode/themes/catppuccin-mocha.json".text = builtins.toJSON {
     "$schema" = "https://opencode.ai/theme.json";
     defs = palette;
     theme = {

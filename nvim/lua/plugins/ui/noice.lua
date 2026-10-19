@@ -1,3 +1,5 @@
+local palette = require("core.palette")
+
 return {
     "folke/noice.nvim",
     dependencies = {
@@ -5,7 +7,7 @@ return {
         {
             "rcarriga/nvim-notify",
             opts = {
-                background_colour = "#090B10",
+                background_colour = palette.base,
             },
         },
     },

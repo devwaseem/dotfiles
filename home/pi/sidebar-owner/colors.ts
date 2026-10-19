@@ -24,11 +24,11 @@ export const COLORS = {
 
 // Hex fallbacks used when no pi theme is injected (tests, cold start)
 const FALLBACK_HEX: Record<string, string> = {
-  accent: "#febc38",
-  success: "#5faf5f",
-  warning: "#ff9500",
-  text: "#00afaf",
-  muted: "#6c6c6c",
+  accent: "#cba6f7",
+  success: "#a6e3a1",
+  warning: "#f9e2af",
+  text: "#cdd6f4",
+  muted: "#7f849c",
 };
 
 let _piTheme: any = null;
@@ -49,7 +49,7 @@ export function dim(text: string): string {
 
 export function fg(colorName: string, text: string): string {
   if (_piTheme) return _piTheme.fg(colorName, text);
-  const hex = FALLBACK_HEX[colorName] ?? "#ffffff";
+  const hex = FALLBACK_HEX[colorName] ?? "#cdd6f4";
   return `${hexToAnsi(hex)}${text}${RESET}`;
 }
 

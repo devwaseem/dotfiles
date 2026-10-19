@@ -1,8 +1,4 @@
-_:
-let
-  palette = import ./theme.nix;
-in
-{
+_: {
   programs.ghostty = {
     enable = true;
     package = null;
@@ -10,31 +6,20 @@ in
     installVimSyntax = false;
     settings = {
       # ui
-      background = palette.base;
-      foreground = palette.text;
-      palette = [
-        "0=${palette.base}"
-        "1=${palette.red}"
-        "2=${palette.green}"
-        "3=${palette.yellow}"
-        "4=${palette.blue}"
-        "5=${palette.mauve}"
-        "6=${palette.teal}"
-        "7=${palette.subtext1}"
-        "8=${palette.overlay1}"
-        "9=${palette.red}"
-        "10=${palette.green}"
-        "11=${palette.yellow}"
-        "12=${palette.blue}"
-        "13=${palette.mauve}"
-        "14=${palette.teal}"
-        "15=${palette.text}"
-      ];
-      cursor-color = palette.text;
-      cursor-text = palette.base;
-      selection-background = palette.surface2;
-      selection-foreground = palette.text;
+      theme = "Catppuccin Mocha";
+      background = "#000000";
       mouse-hide-while-typing = true;
+
+      # Avoid leaking Herdr pane identity into standalone Ghostty shells.
+      env = [
+        "HERDR_BIN_PATH="
+        "HERDR_ENV="
+        "HERDR_PANE_ID="
+        "HERDR_SOCKET_PATH="
+        "HERDR_STARTUP_CWD="
+        "HERDR_TAB_ID="
+        "HERDR_WORKSPACE_ID="
+      ];
 
       # font
       font-family = "Lilex";
@@ -54,8 +39,9 @@ in
       # clipboard
       copy-on-select = true;
       clipboard-trim-trailing-spaces = true;
-      background-opacity = 1.0;
-      background-blur = 0;
+      background-opacity = 0.85;
+      background-opacity-cells = true;
+      background-blur = true;
 
       # macos
       keybind = [ "cmd+k=text:\\x1b[107;7u" ];

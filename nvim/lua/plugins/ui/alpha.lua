@@ -1,3 +1,5 @@
+local palette = require("core.palette")
+
 local function get_greeting(username)
     local hour = tonumber(vim.fn.strftime('%H'))
     -- [04:00, 12:00) - morning, [12:00, 20:00) - day, [20:00, 04:00) - evening
@@ -17,9 +19,7 @@ return {
     },
     config = function()
         local alpha = require("alpha")
-        vim.cmd [[
-          highlight MyGreeting gui=bold guifg=#FFD700 cterm=bold ctermfg=220
-        ]]
+        vim.api.nvim_set_hl(0, "MyGreeting", { bold = true, fg = palette.mauve })
         local config = {
             layout = {
                 { type = "padding", val = 20 }, -- vertical padding

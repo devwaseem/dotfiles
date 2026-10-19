@@ -1,0 +1,265 @@
+diff --git a/src/client/shell/agent_sidebar.rs b/src/client/shell/agent_sidebar.rs
+index e43ab8c..a81e6ea 100644
+--- a/src/client/shell/agent_sidebar.rs
++++ b/src/client/shell/agent_sidebar.rs
+@@ -10,11 +10,59 @@ use ratatui::{
+ 
+ use super::*;
+ 
++#[derive(Clone, Copy, PartialEq, Eq)]
++enum AgentPriorityGroup {
++    NeedsYou,
++    Working,
++    Quiet,
++}
++
++impl AgentPriorityGroup {
++    fn for_status(status: crate::api::schema::AgentStatus) -> Self {
++        use crate::api::schema::AgentStatus;
++        match status {
++            AgentStatus::Blocked | AgentStatus::Done => Self::NeedsYou,
++            AgentStatus::Working => Self::Working,
++            AgentStatus::Idle | AgentStatus::Unknown => Self::Quiet,
++        }
++    }
++
++    fn label(self) -> &'static str {
++        match self {
++            Self::NeedsYou => " NEEDS YOU",
++            Self::Working => " WORKING",
++            Self::Quiet => " QUIET",
++        }
++    }
++}
++
+ pub(super) struct AgentRow {
+     pub(super) pane_id: String,
+     pub(super) status: crate::api::schema::AgentStatus,
+     pub(super) focused: bool,
+     pub(super) rows: Vec<Vec<crate::ui::ResolvedToken>>,
++    group_label: Option<&'static str>,
++    group_spacing: bool,
++}
++
++impl AgentRow {
++    fn group_header_height(&self) -> usize {
++        usize::from(self.group_label.is_some()) + usize::from(self.group_spacing)
++    }
++
++    pub(super) fn line_count(&self) -> usize {
++        self.rows.len().max(1) + self.group_header_height()
++    }
++
++    pub(super) fn content_rect(&self, rect: Rect) -> Rect {
++        let header_height = self.group_header_height().min(u16::MAX as usize) as u16;
++        Rect::new(
++            rect.x,
++            rect.y.saturating_add(header_height),
++            rect.width,
++            rect.height.saturating_sub(header_height),
++        )
++    }
+ }
+ 
+ pub(super) fn ordered_agent_pane_ids(
+@@ -79,9 +127,10 @@ pub(super) fn render_agent_panel(
+         config,
+         agent_scroll,
+         hits,
+-        |row| row.rows.len(),
++        AgentRow::line_count,
+         |buffer, rect, row, hits| {
+-            hits.agents.push((rect, row.pane_id.clone()));
++            hits.agents
++                .push((row.content_rect(rect), row.pane_id.clone()));
+             render_agent_row(buffer, rect, row, config);
+         },
+     );
+@@ -234,15 +283,30 @@ pub(super) fn render_agent_list<T>(
+     }
+ }
+ 
++pub(super) fn label_priority_groups<'a>(rows: impl IntoIterator<Item = &'a mut AgentRow>) {
++    let mut previous_group = None;
++    for row in rows {
++        let group = AgentPriorityGroup::for_status(row.status);
++        let starts_group = previous_group != Some(group);
++        row.group_label = starts_group.then_some(group.label());
++        row.group_spacing = starts_group && previous_group.is_some();
++        previous_group = Some(group);
++    }
++}
++
+ pub(super) fn agent_rows(
+     snapshot: &ClientShellSnapshot,
+     config: &ClientShellConfig,
+     machine: Option<&str>,
+ ) -> Vec<AgentRow> {
+-    ordered_agent_pane_ids(snapshot, config.agent_panel_sort)
++    let mut rows = ordered_agent_pane_ids(snapshot, config.agent_panel_sort)
+         .into_iter()
+         .filter_map(|pane_id| agent_row(snapshot, &pane_id, config, machine))
+-        .collect()
++        .collect::<Vec<_>>();
++    if config.agent_panel_sort == crate::config::AgentPanelSortConfig::Priority {
++        label_priority_groups(rows.iter_mut());
++    }
++    rows
+ }
+ 
+ pub(super) fn agent_row(
+@@ -315,6 +379,8 @@ pub(super) fn agent_row(
+         status: agent.agent_status,
+         focused: agent.focused,
+         rows,
++        group_label: None,
++        group_spacing: false,
+     })
+ }
+ 
+@@ -325,6 +391,19 @@ pub(super) fn render_agent_row(
+     config: &ClientShellConfig,
+ ) {
+     let palette = &config.palette;
++    if let Some(label) = row.group_label {
++        put_text(
++            buffer,
++            rect.x,
++            rect.y.saturating_add(u16::from(row.group_spacing)),
++            rect.width,
++            label,
++            Style::default()
++                .fg(palette.overlay0)
++                .add_modifier(Modifier::BOLD | Modifier::DIM),
++        );
++    }
++    let rect = row.content_rect(rect);
+     let row_style = if row.focused {
+         Style::default().bg(palette.active_row_bg)
+     } else {
+@@ -394,3 +473,57 @@ fn sidebar_status_text(status: crate::api::schema::AgentStatus) -> &'static str
+         AgentStatus::Idle | AgentStatus::Unknown => "idle",
+     }
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use crate::api::schema::AgentStatus;
++
++    #[test]
++    fn priority_groups_match_attention_workflow() {
++        assert_eq!(
++            AgentPriorityGroup::for_status(AgentStatus::Blocked).label(),
++            " NEEDS YOU"
++        );
++        assert_eq!(
++            AgentPriorityGroup::for_status(AgentStatus::Done).label(),
++            " NEEDS YOU"
++        );
++        assert_eq!(
++            AgentPriorityGroup::for_status(AgentStatus::Working).label(),
++            " WORKING"
++        );
++        assert_eq!(
++            AgentPriorityGroup::for_status(AgentStatus::Idle).label(),
++            " QUIET"
++        );
++        assert_eq!(
++            AgentPriorityGroup::for_status(AgentStatus::Unknown).label(),
++            " QUIET"
++        );
++    }
++
++    #[test]
++    fn priority_groups_add_spacing_between_sections() {
++        let mut rows = [
++            AgentStatus::Blocked,
++            AgentStatus::Done,
++            AgentStatus::Working,
++            AgentStatus::Idle,
++        ]
++        .map(|status| AgentRow {
++            pane_id: String::new(),
++            status,
++            focused: false,
++            rows: Vec::new(),
++            group_label: None,
++            group_spacing: false,
++        });
++
++        label_priority_groups(rows.iter_mut());
++
++        assert_eq!(rows.each_ref().map(|row| row.line_count()), [2, 1, 3, 3]);
++        assert_eq!(rows[0].content_rect(Rect::new(0, 0, 10, 2)).y, 1);
++        assert_eq!(rows[2].content_rect(Rect::new(0, 0, 10, 3)).y, 2);
++    }
++}
+diff --git a/src/client/shell/endpoint_agents.rs b/src/client/shell/endpoint_agents.rs
+index b56b41f..b958ae9 100644
+--- a/src/client/shell/endpoint_agents.rs
++++ b/src/client/shell/endpoint_agents.rs
+@@ -70,7 +70,7 @@ pub(super) fn render_expanded(
+         config,
+         agent_scroll,
+         hits,
+-        |row| row.agent.rows.len(),
++        |row| row.agent.line_count(),
+         |buffer, rect, row, hits| {
+             super::agent_sidebar::render_agent_row(buffer, rect, &row.agent, config);
+             if row.stale {
+@@ -81,8 +81,11 @@ pub(super) fn render_expanded(
+                         .add_modifier(Modifier::DIM),
+                 );
+             }
+-            hits.endpoint_agents
+-                .push((rect, row.endpoint_id.clone(), row.agent.pane_id.clone()));
++            hits.endpoint_agents.push((
++                row.agent.content_rect(rect),
++                row.endpoint_id.clone(),
++                row.agent.pane_id.clone(),
++            ));
+         },
+     );
+ }
+@@ -106,7 +109,7 @@ impl ClientShellState {
+         };
+         let heights = rows
+             .iter()
+-            .map(|row| row.agent.rows.len().max(1).min(u16::MAX as usize) as u16)
++            .map(|row| row.agent.line_count().min(u16::MAX as usize) as u16)
+             .collect::<Vec<_>>();
+         let mut gaps = vec![self.config.agents.row_gap; rows.len()];
+         if let Some(last) = gaps.last_mut() {
+@@ -156,7 +159,7 @@ fn agent_rows(
+         .flatten()
+         .collect::<HashMap<_, _>>();
+ 
+-    super::aggregate_navigation::aggregate_agent_rows(
++    let mut rows = super::aggregate_navigation::aggregate_agent_rows(
+         endpoints,
+         active_endpoint_id,
+         config.agent_panel_sort,
+@@ -173,5 +176,9 @@ fn agent_rows(
+             agent,
+         })
+     })
+-    .collect()
++    .collect::<Vec<_>>();
++    if config.agent_panel_sort == crate::config::AgentPanelSortConfig::Priority {
++        super::agent_sidebar::label_priority_groups(rows.iter_mut().map(|row| &mut row.agent));
++    }
++    rows
+ }
+diff --git a/src/client/shell/tests/agents_worktrees_notifications.rs b/src/client/shell/tests/agents_worktrees_notifications.rs
+index df09f46..32e11db 100644
+--- a/src/client/shell/tests/agents_worktrees_notifications.rs
++++ b/src/client/shell/tests/agents_worktrees_notifications.rs
+@@ -725,6 +725,7 @@ fn agent_sidebar_honors_priority_symbols_tokens_and_stable_hits() {
+     assert!(text.contains("× needs input"), "frame: {text}");
+     assert!(text.contains("pi two"), "frame: {text}");
+     assert!(text.contains("waiting for"), "frame: {text}");
++    assert_eq!(text.matches("NEEDS YOU").count(), 1, "frame: {text}");
+     assert_eq!(
+         state
+             .hits

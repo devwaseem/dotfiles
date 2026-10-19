@@ -19,6 +19,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    herdr = {
+      url = "github:herdrdev/herdr/v0.9.5";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     qmd = {
       url = "github:tobi/qmd";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +37,7 @@
       nixpkgs,
       sops-nix,
       home-manager,
+      herdr,
       git-hooks-nix,
       qmd,
       omp,
@@ -81,6 +86,16 @@
             sops-nix.darwinModules.sops
             home-manager.darwinModules.home-manager
             {
+              nixpkgs.overlays = [
+                herdr.overlays.default
+                # Herdr 0.9.5 sorts by priority but does not render visible status-group headings.
+                (_final: prev: {
+                  herdr = prev.herdr.overrideAttrs (oldAttrs: {
+                    patches = (oldAttrs.patches or [ ]) ++ [ ./patches/herdr-agent-status-groups.patch ];
+                  });
+                })
+              ];
+
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;

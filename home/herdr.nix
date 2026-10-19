@@ -5,7 +5,7 @@ let
 in
 {
   xdg.configFile."herdr/config.toml".source = toml.generate "herdr-config.toml" {
-    theme.name = "gruvbox";
+    theme.name = "catppuccin";
 
     terminal = {
       default_shell = "zsh";
@@ -150,6 +150,29 @@ in
     };
 
     ui = {
+      sidebar.agents.rows = [
+        [
+          "state_icon"
+          {
+            token = "terminal_title_stripped";
+            bold = true;
+            dim = false;
+          }
+        ]
+        [
+          {
+            token = "workspace";
+            bold = false;
+            dim = true;
+          }
+          {
+            token = "tab";
+            bold = false;
+            dim = true;
+          }
+        ]
+      ];
+
       accent = palette.yellow;
       agent_panel_sort = "priority";
       status_indicators = "symbols";

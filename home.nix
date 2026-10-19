@@ -163,6 +163,7 @@ in
           options = {
             line-numbers = true;
             side-by-side = true;
+            syntax-theme = "Catppuccin Mocha";
           };
         };
 
@@ -201,7 +202,7 @@ in
     bat = {
       enable = true;
       config = {
-        theme = "gruvbox-dark";
+        theme = "Catppuccin Mocha";
         italic-text = "always";
         style = "numbers,changes,header";
         pager = "less -R";
